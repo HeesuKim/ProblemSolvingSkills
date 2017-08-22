@@ -840,3 +840,342 @@ void main() {
 	printf("\n");
 }
 */
+
+
+//DATE-->0822
+
+
+//이진검색BinarySearch
+//크기에 따라 검색범위를 반씩 줄여가며 탐색. logn번에 탐색가능.
+
+/*
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX 100
+#define TRUE 1
+#define FALSE 0
+
+void MakeRandomNumber(void);
+void QuickSort(int[], int, int);
+void DisplayBuffer(void);
+int IsNumberExist(int, int);
+int BinarySearch(int);
+int Buf[MAX];
+int CompareCount;
+
+void MakeRandomNumber(void) {
+	int i, Num;
+	i = 0;
+	srand((unsigned)time(NULL));
+
+	while (i < MAX) {
+		Num = rand() % 200;
+
+		if (!IsNumberExist(Num, i)) {
+			Buf[i] = Num;
+			i++;
+		}
+	}
+}
+
+void QuickSort(int data[], int left, int right) {
+	int num, i, j, temp;
+	if (right > left) {
+		num = data[right];
+		i = left - 1;
+		j = right;
+
+		while (1) {
+			while (data[++i] < num);
+			while (data[--j] > num);
+			if (i >= j)
+				break;
+
+			temp = data[i];
+			data[i] = data[j];
+			data[j] = temp;
+		}
+		
+		temp = data[i];
+		data[i] = data[right];
+		data[right] = temp;
+
+		QuickSort(data, left, i - 1);
+		QuickSort(data, i + 1, right);
+	}
+}
+
+void DisplayBuffer(void) {
+	int i;
+	for (i = 0; i < MAX; i++) {
+		if ((i % 10) == 0)
+			printf("\n");
+
+		printf("%4d", Buf[i]);
+	}
+	printf("\n");
+}
+
+int IsNumberExist(int number, int index) {
+	int i;
+
+	for (i = 0; i < index; i++) {
+		if (Buf[i] == number)
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+int BinarySearch(int num) {
+	int left, right;
+	int min;
+	left = 0;
+	right = MAX;
+
+	while (right >= left) {
+		CompareCount++;
+		min = (left + right) / 2;
+
+		if (num < Buf[min])
+			right = min - 1;
+		else
+			left = min + 1;
+
+		if (num == Buf[min])
+			return min;
+	}
+
+	return -1;
+}
+
+void main() {
+	int ret;
+	CompareCount = 0;
+	MakeRandomNumber();
+	QuickSort(Buf, 0, MAX - 1);
+	printf("정렬된 데이터\n");
+	DisplayBuffer();
+
+	ret = BinarySearch(23);
+
+	if (ret == -1)
+		printf("찾는 데이터가 없음.\n");
+	else
+		printf("23은 %d번째에 존재.\n", ret);
+
+	printf("총 비교 횟수는 %d.\n", CompareCount);
+
+}
+*/
+
+
+//이진검색트리 삽입삭제BinarySearchTree InsertDelete
+//삭제의 경우의수를 나누어 생각.
+//더 쉬운 방법으로 단말노드, 서브트리1개, 2개의 경우로 나누어 생각할 수 있음.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX 10
+#define TRUE 1
+#define FALSE 0
+
+typedef struct _NODE {
+	int key;
+	struct _NODE *left;
+	struct _NODE *right;
+} NODE;
+
+NODE *ptrNode;
+NODE *head;
+NODE *end;
+
+void MakeRandomNumber(void);
+void QuickSort(int[], int, int);
+void DisplayBuffer(void);
+int IsNumberExist(int, int);
+void BSTInitialize(void);
+void BSTInsert(int);
+void BSTDelete(int);
+void BSTDisplay(NODE *);
+int Buf[MAX];
+int CompareCount;
+
+void MakeRandomNumber(void) {
+	int i, Num;
+	i = 0;
+	srand((unsigned)time(NULL));
+
+	while (i < MAX) {
+		Num = rand() % 200;
+
+		if (!IsNumberExist(Num, i)) {
+			Buf[i] = Num;
+			i++;
+		}
+	}
+}
+
+void QuickSort(int data[], int left, int right) {
+	int num, i, j, temp;
+	if (right > left) {
+		num = data[right];
+		i = left - 1;
+		j = right;
+
+		while (1) {
+			while (data[++i] < num);
+			while (data[--j] > num);
+			if (i >= j)
+				break;
+
+			temp = data[i];
+			data[i] = data[j];
+			data[j] = temp;
+		}
+
+		temp = data[i];
+		data[i] = data[right];
+		data[right] = temp;
+
+		QuickSort(data, left, i - 1);
+		QuickSort(data, i + 1, right);
+	}
+}
+
+void DisplayBuffer(void) {
+	int i;
+	for (i = 0; i < MAX; i++) {
+		if ((i % 10) == 0)
+			printf("\n");
+
+		printf("%4d", Buf[i]);
+	}
+	printf("\n");
+}
+
+int IsNumberExist(int number, int index) {
+	int i;
+
+	for (i = 0; i < index; i++) {
+		if (Buf[i] == number)
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+void BSTInitialize(void) {
+	end = (NODE *)malloc(sizeof *end);
+	end->left = end;
+	end->right = end;
+	end->key = -1;
+
+	head = (NODE *)malloc(sizeof *head);
+	head->right = end;
+	head->key = 0;
+}
+
+void BSTInsert(int num) {
+	NODE *p, *x;
+	p = head;
+	x = head->right;
+
+	while (x != end) {
+		p = x;//최종적으로x의 부모가 되는 노드 p
+		x = (num < x->key) ? x->left : x->right;
+	}
+
+	x = (NODE *)malloc(sizeof *x);
+	x->key = num;
+	x->left = end;
+	x->right = end;
+
+	if (num < p->key)
+		p->left = x;
+	else
+		p->right = x;
+}
+
+void BSTDelete(int num) {
+	NODE *g, *p, *x;
+	NODE *temp;
+	end->key = num;
+	p = head;
+	x = head->right;
+
+	while (num != x->key) {
+		p = x;
+
+		if (num < x->key)
+			x = x->left;
+		else
+			x = x->right;
+	}
+
+	temp = x;
+
+	//ast.
+	if (temp->right == end)//단말노드이거나 왼쪽서브트리(삭제노드보다 작은값)만 있을 경우
+		x = x->left;
+	else if (temp->right->left == end) {//삭제노드의 왼쪽서브트리를 한번에 옮길 수 있는 경우
+		x = x->right;
+		x->left = temp->left;
+	}
+	else {//서브트리 단위로 옮기는 것이 불가능한 나머지 경우
+		g = x->right;
+
+		while (g->left->left != end)
+			g = g->left;
+
+		x = g->left;
+		g->left = x->right;
+		x->left = temp->left;
+		x->right = temp->right;
+	}
+
+	free(temp);
+
+	if (num < p->key)
+		p->left = x;
+	else
+		p->right = x;
+}
+
+void BSTDisplay(NODE *ptr) {
+	if (ptr != end) {
+		BSTDisplay(ptr->left);
+		printf("%5d", ptr->key);
+		BSTDisplay(ptr->right);
+	}
+}
+
+void main() {
+	int i, ret;
+	CompareCount = 0;
+
+	MakeRandomNumber();
+	//QuickSort(Buf, 0, MAX - 1);
+	printf("생성된 데이터\n");
+	DisplayBuffer();
+
+	BSTInitialize();
+	for (i = 0; i < MAX; i++)
+		BSTInsert(Buf[i]);
+
+	printf("RootNode : %d\n", head->right->key);
+
+	BSTDisplay(head->right);
+	printf("\n");
+
+
+	printf("%d 삭제 후\n", Buf[5]);
+
+	BSTDelete(Buf[5]);
+	BSTDisplay(head->right);
+	printf("\n");
+}
