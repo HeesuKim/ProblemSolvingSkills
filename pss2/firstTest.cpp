@@ -976,6 +976,8 @@ void main() {
 //삭제의 경우의수를 나누어 생각.
 //더 쉬운 방법으로 단말노드, 서브트리1개, 2개의 경우로 나누어 생각할 수 있음.
 
+
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -1178,4 +1180,155 @@ void main() {
 	BSTDelete(Buf[5]);
 	BSTDisplay(head->right);
 	printf("\n");
+}
+
+*/
+
+
+//DATE-->0824
+
+//키-매핑 검색 Key-Mapping Search
+//해쉬함수의 복잡화 필요. O(1) 속도
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX 100
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+
+typedef struct _NODE {
+	int Key[3];
+	int Counter;
+} NODE;
+
+void Initialize(void);
+void MakeRandomNumber(void);
+void DisplayBuffer(void);
+void DisplayHitBuffer(void);
+void DisplayHitCounter(void);
+int IsNumberExist(int);
+
+int Buf[MAX];
+NODE Hit[50];
+
+void Initialize(void) {
+	int i, j;
+	for (i = 0; i < MAX; i++)
+		Buf[i] = -1;
+
+	for (i = 0; i < 20; i++) {
+		for (j = 0; j < 3; j++)
+			Hit[i].Key[j] = -1;
+		
+		Hit[i].Counter = 0;
+	}
+}
+
+void MakeRandomNumber(void) {
+	int i, Num, index;
+	i = 0;
+	srand((unsigned)time(NULL));
+
+	while (i < 50) {
+		Num = rand() % 100;
+
+		if (!IsNumberExist(Num)) {
+			Buf[Num] = Num;
+			index = Num % 50;
+
+			if (Hit[index].Counter > 2)
+				printf("\n OVERFLOW\n");
+			else
+				Hit[index].Key[Hit[index].Counter++] = Num;
+
+			i++;
+		}
+	}
+}
+
+void DisplayBuffer(void) {
+	int i;
+
+	for (i = 0; i < MAX; i++) {
+		if ((i % 10) == 0)
+			printf("\n");
+
+		printf("%4d ", Buf[i]);
+	}
+	
+	printf("\n");
+}
+
+void DisplayHitBuffer(void) {
+	int i;
+
+	printf("====> HIT KEY DATA <====\n");
+
+	for (i = 0; i < 50; i++) {
+		if ((i % 5) == 0)
+			printf("\n");
+
+		switch (Hit[i].Counter) {
+		case 0:
+		case 1:
+			printf("%3d", Hit[i].Key[0]);
+			break;
+			
+		case 2:
+			printf("%3d/%3d", Hit[i].Key[0], Hit[i].Key[1]);
+			break;
+
+		case 3:
+			printf("%3d/%3d/%3d", Hit[i].Key[0], Hit[i].Key[1], Hit[i].Key[2]);
+			break;
+
+		default:
+			printf("**");
+		}
+		
+		printf("\t");
+	}
+
+	printf("\n\n");
+}
+
+void DisplayHitCounter(void) {
+	int i;
+	printf("====> HIT COUNTER DATA <====\n");
+
+	for (i = 0; i < 50; i++) {
+		if ((i % 5) == 0)
+			printf("\n");
+
+		printf("%4d ", Hit[i].Counter);
+	}
+
+	printf("\n");
+}
+
+int IsNumberExist(int number) {
+	int i;
+
+	for (i = 0; i < MAX; i++) {
+		if (Buf[i] == number)
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+void main() {
+	Initialize();
+
+	MakeRandomNumber();
+	printf("키-매핑으로 생성된 데이터\n");
+	DisplayBuffer();
+
+	printf("\n");
+
+	DisplayHitBuffer();
+	DisplayHitCounter();
 }
