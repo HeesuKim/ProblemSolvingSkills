@@ -1190,6 +1190,7 @@ void main() {
 //키-매핑 검색 Key-Mapping Search
 //해쉬함수의 복잡화 필요. O(1) 속도
 
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -1331,4 +1332,139 @@ void main() {
 
 	DisplayHitBuffer();
 	DisplayHitCounter();
+}
+
+*/
+
+
+//16진수 10진수 변환
+/*
+#include <stdio.h>
+
+void main() {
+	char key;
+	int data;
+
+	printf("10진수 -> 16진수 A\n");
+	printf("16진수 -> 10진수 B\n");
+	
+	printf("고르세요 : ");
+	scanf_s("%c", &key);
+
+	printf("숫자 입력 :");
+	
+	if (key == 'a') {
+		scanf_s("%d", &data);
+		printf("10진수 %d --> 16진수 %x\n", data, data);
+	}
+	else if (key == 'b') {
+		scanf_s("%x", &data);
+		printf("16진수 %x --> 10진수 %d\n", data, data);
+	}
+	else {
+		printf("오류\n");
+	}
+}
+*/
+
+//숫자 맞추기
+/*
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+void main() {
+	int num, i, data;
+	srand((unsigned)time(NULL));
+	num = rand() % 10;
+	i = 1;
+	printf("0~9사이의 수 맞추기.\n");
+
+	while (1) {
+		printf("'%d'번째 시도 : ", i);
+		scanf_s("%d", &data);
+
+		if (data < num)
+			printf("%d보다 큼.\n", data);
+		else if (data > num)
+			printf("%d보다 작음.\n", data);
+		else {
+			printf("'%d'번째 시도로 정답.\n", i);
+			break;
+		}
+
+		i++;
+	}
+}
+
+*/
+
+//피보나치 수열 구하기
+/*
+#include <stdio.h>
+
+void main() {
+	int i, firNum, secNum, rstNum;
+
+	printf("피보나치 수열\n");
+
+	i = 0;
+	firNum = 0;
+	secNum = 1;
+
+	while (i < 12) {
+		rstNum = firNum + secNum;
+
+		if ((i % 5) == 0)
+			printf("\n");
+
+		printf("%6d", rstNum);
+
+		firNum = secNum;
+		secNum = rstNum;
+		i++;
+	}
+}
+*/
+
+//소수구하기
+/*
+#include <stdio.h>
+
+void main() {
+	printf("1000이전까지의 모든 소수 나열.\n");
+	
+	int line = 0;
+	for (int i = 2; i <= 1000; i++) {
+		for (int j = 2; j <= i; j++) {
+			if (i % j == 0 && i != j)
+				break;
+			else if (i % j == 0 && i == j) {
+				printf("%4d ", i);
+				line++;
+				if ((line % 5) == 0)
+					printf("\n");
+			}
+		}
+	}
+}
+
+*/
+
+//지그재그출력
+
+#include <stdio.h>
+
+void main() {
+	printf("지그재그 숫자 출력 프로그램.\n");
+
+	for (int i = 1; i <= 12; i++) {
+		for (int j = 1; j <= 5; j++) {
+			if (i % 2 == 1)
+				printf("%3d", (5 * i) - 5 + j);
+			else
+				printf("%3d", (5 * i) + 1 - j);
+		}
+		printf("\n");
+	}
 }
