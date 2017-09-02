@@ -1453,6 +1453,7 @@ void main() {
 
 //지그재그출력
 
+/*
 #include <stdio.h>
 
 void main() {
@@ -1467,4 +1468,442 @@ void main() {
 		}
 		printf("\n");
 	}
+}
+*/
+
+
+//DATE-->0831
+
+//최적해 찾기
+//Greedy? 동적계획법?
+/*
+#include <stdio.h>
+
+#define INPUT_FILE "input.txt"
+#define OUTPUT_FILE "output.txt"
+#define MAX_N 1000
+#define MAX_WEIGHT 10000
+#define MAX_VALUE (50000 * MAX_WEIGHT)
+
+int T, E, F, N;
+int P[MAX_N], W[MAX_N];
+int S[MAX_WEIGHT];
+FILE *inf, *outf;
+
+void input_data(void) {
+	int i;
+	fscanf_s(inf, "%d %d\n", &E, &F);
+	fscanf_s(inf, "%d\n", &N);
+
+	for (i = 0; i < N; i++)
+		fscanf_s(inf, "%d %d\n", &P[i], &W[i]);
+}
+
+void initialize_S(void) {
+	int i;
+	S[0] = 0;
+
+	for (i = 1; i <= F - E; i++)
+		S[i] = MAX_VALUE;
+}
+
+void solve(void) {
+	int i, j;
+	initialize_S();
+
+	for (i = 0; i < N; i++)
+		for (j = 0; j <= F - E - W[i]; j++)
+			if (S[j] + P[i] < S[j + W[i]])
+				S[j + W[i]] = S[j] + P[i];
+}
+
+void output_result(void) {
+	if (S[F - E] == MAX_VALUE)
+		printf("-1\n");
+	else
+		printf("최소실행시간 : %d\n", S[F - E]);
+
+}
+
+void main() {
+	int i;
+	if (fopen_s(&inf, INPUT_FILE, "r") != 0) {
+		printf("파일오픈에러.\n");
+	}
+	fscanf_s(inf, "%d\n", &T);
+
+	for (i = 0; i < T; i++) {
+		input_data();
+		solve();
+		output_result();
+	}
+
+	fclose(inf);
+}
+*/
+
+
+//bj 2839
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int N;
+	int bag3 = 0;
+	int	bag5 = 0;
+
+	cin >> N;
+	bag5 = (N / 5);
+	N %= 5;
+
+	if (N == 0 || N == 3)
+		cout << bag5 + (N / 3) << endl;
+	else {
+		while (0 < bag5--) {
+			N += 5;
+			bag3 = N / 3;
+			if (N % 3 == 0) {
+				cout << bag5 + bag3 << endl;
+				return 0;
+			}
+		}
+		cout << "-1" << endl;
+	}
+}
+
+*/
+
+//endl보다 \n이 훨씬 실행속도면에서 빠름.
+
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n, i, j, k;
+	cin >> n;
+
+	for (i = 1; i <= n; i++) {
+		for (j = 1; j <= n; j++) {
+			if (j <= (n - i))
+				cout << " ";
+			else
+				cout << "*";
+		}
+		cout << "\n";
+	}
+}
+
+*/
+
+//DATE-->0902
+
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int N;
+	cin >> N;
+
+	for (int i = N; i > 0; i--) {
+		for (int j = 0; j < N - i; j++)
+			cout << " ";
+		for (int k = 0; k < i; k++)
+			cout << "*";
+
+		cout << "\n";
+	}
+}
+
+*/
+
+
+//bj 1924
+/*
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	int x, y;
+	int month, day;
+	int date = 0;
+	string a[7] = { "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" };
+
+	cin >> x >> y;
+
+	for (month = 1; month <= x - 1; month++) {
+		if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+			day = 31;
+		else if (month == 2)
+			day = 28;
+		else
+			day = 30;
+
+		date += day;
+	}
+
+	date += y;
+
+	date %= 7;
+
+	cout << a[date] << "\n";
+}
+*/
+
+//bj 11720
+//왜 주석은 틀릴까
+
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	char inputNum[100] = { '0', };
+	int length = 0;
+	int rst = 0;
+
+	cin >> length;
+	cin >> inputNum;
+
+	for (int i = 0; i < length; i++) {
+		rst += (inputNum[i] - '0');
+	}
+
+	//int n, num;
+	//int digit = 0;
+	//int rst = 0;
+	//cin >> n;
+	//cin >> num;
+
+	//for (int i = 1; i <= n; i++) {
+	//	digit = num % 10;
+	//	num /= 10;
+	//	
+	//	rst += digit;
+	//}
+
+	cout << rst << "\n";
+}
+
+*/
+
+
+//bj 11721
+//strlen 사용
+
+/*
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int main() {
+	char inputStr[100];
+	int len;
+
+	cin >> inputStr;
+	len = strlen(inputStr);
+
+	for (int i = 1; i <= len; i++) {
+		cout << inputStr[i - 1];
+
+		if (i % 10 == 0)
+			cout << "\n";
+	}
+}
+
+*/
+
+
+//bj 10871
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int a, b, c;
+	int max, rst;
+
+	cin >> a >> b >> c;
+
+	if (a >= b) {
+		if (c >= a)
+			cout << a << "\n";
+		else
+			if (c >= b)
+				cout << c << "\n";
+			else
+				cout << b << "\n";
+	}
+	else {
+		if (c >= b)
+			cout << b << "\n";
+		else
+			if (c >= a)
+				cout << c << "\n";
+			else
+				cout << a << "\n";
+	}
+}
+
+*/
+
+//나누는 수도 double로 맞춰야 결과가 나오네????
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int C, upScr;
+	int scr[1000];
+	double N, sum, avg, rst;
+
+	cin >> C;
+	for (int i = 0; i < C; i++) {
+		cin >> N;
+
+		sum = 0;
+		for (int j = 0; j < N; j++) {
+			cin >> scr[j];
+			sum += scr[j];
+		}
+		avg = sum / N;
+		upScr = 0;
+		for (int j = 0; j < N; j++) {
+			if (scr[j] > avg)
+				upScr++;
+		}
+		rst = upScr / N * 100;
+		cout << fixed;
+		cout.precision(3);
+		cout << rst << "%\n";
+	}
+}
+
+*/
+
+
+/*
+#include <iostream>
+using namespace std;
+
+bool isHanNum(int a) {
+	int hun, ten, one;
+	if (a < 100)
+		return true;
+	else {
+		hun = a / 100;
+		a -= hun * 100;
+		ten = a / 10;
+		a -= ten * 10;
+		one = a;
+
+		if (hun + (one - ten) * 2 == one)
+			return true;
+		else
+			return false;
+	}
+
+}
+
+int main() {
+	int N;
+	int rst = 0;
+	cin >> N;
+	for (int i = N; i >= 1; i--) {
+		if (isHanNum(i)) {
+			//cout << i << endl;
+			rst++;
+		}
+			
+	}
+
+	cout << rst << "\n";
+}
+*/
+
+/*bj2448
+#include <iostream>
+using namespace std;
+
+char coordi[3090][6200];
+
+void makeTri(int y, int x, int n) {
+	if (n == 3) {
+		coordi[y][x + 2] = '*';
+		coordi[y + 1][x + 1] = '*'; coordi[y + 1][x + 3] = '*';
+		for (int i = 0; i < 5; i++)
+			coordi[y + 2][x + i] = '*';
+	}
+	else {
+		n /= 2;
+		makeTri(y, x + n, n);
+		makeTri(y + n, x, n);
+		makeTri(y + n, x + 2 * n, n);
+	}
+}
+
+int main() {
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < 2 * n; j++) {
+			coordi[i][j] = ' ';
+		}
+	}
+	makeTri(0, 0, n);
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < 2 * n; j++) {
+			cout << coordi[i][j];
+		}
+		cout << "\n";
+	}
+}
+*/
+
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int main() {
+	int t, len, cnt, scr;
+	bool stFlag;
+	char oxChar[81];
+	int rstArr[1000];
+	cin >> t;
+
+	for (int i = 0; i < t; i++) {
+		cin >> oxChar;
+		len = strlen(oxChar);
+		cnt = 0;
+		scr = 0;
+		stFlag = false;
+
+		for (int j = 0; j < len; j++) {
+			if (!stFlag && oxChar[j] == 'O') {
+				stFlag = true;
+				cnt++;
+				scr++;
+				continue;
+			}
+			if (stFlag && oxChar[j] == 'O') {
+				cnt++;
+				scr += cnt;
+				continue;
+			}
+			if (stFlag && oxChar[j] == 'X') {
+				cnt = 0;
+				stFlag = false;
+				continue;
+			}
+		}
+
+		rstArr[i] = scr;
+	}
+
+	for (int i = 0; i < t; i++)
+		cout << rstArr[i] << "\n";
 }
