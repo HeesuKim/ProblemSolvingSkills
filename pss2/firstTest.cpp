@@ -1863,7 +1863,7 @@ int main() {
 	}
 }
 */
-
+/*
 #include <iostream>
 #include <string.h>
 using namespace std;
@@ -1907,3 +1907,181 @@ int main() {
 	for (int i = 0; i < t; i++)
 		cout << rstArr[i] << "\n";
 }
+
+*/
+
+//DATE-->0903
+
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int note[8] = { 0 };
+	bool aFlag = false;
+	bool dFlag = false;
+
+	for (int i = 0; i < 8; i++)
+		cin >> note[i];
+
+	if (note[0] == 1)
+		aFlag = true;
+	else if (note[0] == 8)
+		dFlag = true;
+	else {
+		cout << "mixed" << "\n";
+		return 0;
+	}
+
+	for (int i = 1; i < 8; i++) {
+		if ((aFlag && note[i] != i + 1) ||
+			(dFlag && note[i] != 8 - i)) {
+			cout << "mixed" << "\n";
+			return 0;
+		}
+	}
+
+	if (note[7] == 8)
+		cout << "ascending" << "\n";
+	else
+		cout << "descending" << "\n";
+}
+
+*/
+
+
+//-->DATE 0905
+/*
+
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int main() {
+	char word[1000001];
+	int alphabet[26] = { 0 };
+	int alNum;
+	int maxAl = 0;
+	int maxIdx = 0;
+	int leng;
+
+	cin >> word;
+
+	leng = strlen(word);
+
+	for (int i = 0; i < leng; i++) {
+		alNum = (int)word[i];
+
+		if (alNum < 93)
+			alphabet[alNum - 65]++;
+		else
+			alphabet[alNum - 97]++;
+
+	}
+
+	maxAl = alphabet[0];
+	for (int i = 1; i < 26; i++) {
+		if (alphabet[i] > maxAl) {
+			maxAl = alphabet[i];
+			maxIdx = i;
+		}
+	}
+
+	for (int i = 0; i < 26; i++) {
+		if (alphabet[i] == maxAl && maxIdx != i) {
+			cout << "?" << "\n";
+			return 0;
+		}
+	}
+
+	cout << (char)(maxIdx + 65) << "\n";
+}
+*/
+
+//-->DATE 0906
+
+
+//bj2908 왜 문자열은 오답으로 나올까
+
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int a, b, num1, num2, num3;
+	cin >> a >> b;
+
+	num1 = a / 100;
+	num2 = (a - (a / 100 * 100)) / 10;
+	num3 = a % 10;
+
+	a = num3 * 100 + num2 * 10 + num1;
+
+	num1 = b / 100;
+	num2 = (b - (b / 100 * 100)) / 10;
+	num3 = b % 10;
+
+	b = num3 * 100 + num2 * 10 + num1;
+
+	cout << ((a > b) ? a : b) << "\n";
+
+
+
+
+
+	char num1[4];
+	char num2[4];
+
+	cin >> num1 >> num2;
+
+	char temp;
+
+	temp = num1[0];
+	num1[0] = num1[2];
+	num1[2] = temp;
+
+	temp = num2[0];
+	num2[0] = num2[2];
+	num2[2] = temp;
+
+	if ((num1 - '0') > (num2 - '0'))
+		cout << num1 << "\n";
+	else
+		cout << num2-'0' << "\n";
+}
+*/
+
+
+/*bj5622
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int retTime(char alpha) {
+	int ascii = (int)alpha;
+
+	if (ascii <= 82)
+		return ((ascii - 65) / 3) + 3;
+	else if (ascii == 83)
+		return 8;
+	else if (ascii >= 84 && ascii <= 86)
+		return 9;
+	else
+		return 10;
+}
+
+int main() {
+	char inputWord[16];
+	int leng, sum;
+
+	cin >> inputWord;
+
+	leng = strlen(inputWord);
+	sum = 0;
+	for (int i = 0; i < leng; i++)
+		sum += retTime(inputWord[i]);
+
+	cout << sum << "\n";
+}
+
+*/
