@@ -2085,3 +2085,119 @@ int main() {
 }
 
 */
+
+/*bj2941
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int alpCounter(char word[], int leng) {
+	int retCnt = 0;
+	for (int i = 0; i < leng; i++) {
+		if ((word[i] == 'c' && word[i + 1] == '=') ||
+			(word[i] == 'c' && word[i + 1] == '-') || 
+			(word[i] == 'd' && word[i + 1] == '-') || 
+			(word[i] == 'l' && word[i + 1] == 'j') || 
+			(word[i] == 'n' && word[i + 1] == 'j') || 
+			(word[i] == 's' && word[i + 1] == '=') || 
+			(word[i] == 'z' && word[i + 1] == '=')) {
+			retCnt++;
+			i++;
+			continue;
+		}
+		else if (word[i] == 'd' && word[i + 1] == 'z' && word[i + 2] == '=') {
+			retCnt++;
+			i += 2;
+		}
+		else
+			retCnt++;
+	}
+
+	return retCnt;
+}
+
+int main() {
+	char inputWord[101];
+	int wordNumber;
+	int leng;
+
+	cin >> inputWord;
+	leng = strlen(inputWord);
+	wordNumber = alpCounter(inputWord, leng);
+
+	cout << wordNumber << "\n";
+}
+*/
+
+
+/*bj1316
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+char wordStorage[26] = { 0 };
+int storageCnt = 0;
+
+bool isGword(char word[], char len) {
+	for (int i = 1; i < 26; i++)
+		wordStorage[i] = 0;
+
+	wordStorage[0] = word[0];
+	storageCnt = 1;
+
+	for (int i = 1; i < len; i++) {
+		for (int j = 0; j < storageCnt; j++) {
+			if (word[i] == wordStorage[j] && word[i - 1] != word[i])
+				return false;
+		}
+		wordStorage[storageCnt++] = word[i];
+	}
+
+	return true;
+}
+
+int main() {
+	int N, cnt, leng;
+	bool flag = false;
+	char inputWord[101];
+	
+	cin >> N;
+
+	cnt = 0;
+	for (int i = 0; i < N; i++) {
+		cin >> inputWord;
+		leng = strlen(inputWord);
+
+		if (isGword(inputWord, leng))
+			cnt++;
+	}
+
+	cout << cnt << "\n";
+}
+*/
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	int T;
+	long long x, y, skr, lvl;
+
+	cin >> T;
+
+	for (int i = 0; i < T; i++) {
+		cin >> x >> y;
+		skr = 0;
+		lvl = 1;
+		while ((y - x) > skr) {
+			skr = lvl * lvl + lvl;
+			lvl++;
+		}
+			
+		if ((y - x) > (skr - lvl + 1))
+			cout << (lvl - 2) * 2 + 2 << "\n";
+		else
+			cout << (lvl - 2) * 2 + 1 << "\n";
+	}
+}
