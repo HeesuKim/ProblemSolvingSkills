@@ -2177,27 +2177,1077 @@ int main() {
 }
 */
 
+//-->DATE 0907
+
+//bj6064 실패
+/*
 #include <iostream>
 using namespace std;
 
-int main() {
-	int T;
-	long long x, y, skr, lvl;
+int getGcm(int a, int b)
+{
+	if (b == 0)
+		return a;
+	else
+		return getGcm(b, a % b);
+}
 
+
+int main()
+{
+	int T, M, N, x, y;
 	cin >> T;
 
-	for (int i = 0; i < T; i++) {
-		cin >> x >> y;
-		skr = 0;
-		lvl = 1;
-		while ((y - x) > skr) {
-			skr = lvl * lvl + lvl;
-			lvl++;
+	for (int i = 0; i < T; i++)
+	{
+		cin >> M >> N >> x >> y;
+
+		while ((x != y) && (x <= (M * N) / getGcm(M, N)))
+		{
+			if (x < y)
+				x += M;
+			else
+				y += N;
 		}
-			
-		if ((y - x) > (skr - lvl + 1))
-			cout << (lvl - 2) * 2 + 2 << "\n";
+
+		if (x != y)
+			cout << "-1\n";
 		else
-			cout << (lvl - 2) * 2 + 1 << "\n";
+			cout << x << "\n";
 	}
 }
+*/
+
+//bj 2751 
+//#include <iostream>
+//using namespace std;
+
+//void Swap(int arr[], int idx1, int idx2) {
+//	int temp = arr[idx1];
+//	arr[idx1] = arr[idx2];
+//	arr[idx2] = temp;
+//}
+//
+//int Partition(int arr[], int left, int right) {
+//	int pivot = arr[left];
+//	int low = left + 1;
+//	int high = right;
+//
+//	while (low <= high) {
+//		while (pivot > arr[low])
+//			low++;
+//		while (pivot < arr[high])
+//			high--;
+//		if (low <= high)	//중요. 아직 low가 high보다 작을 때만 바꿈
+//			Swap(arr, low, high);
+//	}
+//
+//	Swap(arr, left, high);	//pivot과 high위치 교환
+//
+//	return high;			//pivot이 삽입된 위치 정보 반환
+//}
+//
+//void QuickSort(int arr[], int left, int right) {
+//	if (left <= right) {
+//		int pivot = Partition(arr, left, right);
+//		QuickSort(arr, left, pivot - 1);	//pivot의 위치를 기준(제외)으로 좌우 나눔
+//		QuickSort(arr, pivot + 1, right);
+//	}
+//}
+
+//퀵소트 
+/*
+void quickSort(int arr[], int left, int right)
+{
+	if (left <= right)
+	{
+		int pivot = arr[left];
+		int lIdx = left + 1;
+		int rIdx = right;
+		int temp;
+
+		while (lIdx <= rIdx)
+		{
+			while (arr[lIdx] < pivot)
+				lIdx++;
+			while (arr[rIdx] > pivot)
+				rIdx--;
+
+			if (lIdx <= rIdx)
+			{
+				temp = arr[lIdx];
+				arr[lIdx] = arr[rIdx];
+				arr[rIdx] = temp;
+			}
+		}
+
+		temp = arr[left];
+		arr[left] = arr[rIdx];
+		arr[rIdx] = temp;
+
+		quickSort(arr, left, rIdx - 1);
+		quickSort(arr, rIdx + 1, right);
+	}
+}
+
+int main()
+{
+	int arr[1000001];
+	int T;
+
+	cin >> T;
+	for (int i = 0; i < T; i++)
+		cin >> arr[i];
+	
+	quickSort(arr, 0, T - 1);
+
+	for (int i = 0; i < T; i++)
+		cout << arr[i] << "\n";
+}
+*/
+
+//bj 10989 radix정렬 런타임오류 해결불가. 인덱스 방식으로 바꿈
+/*
+#include <iostream>
+#include <queue>
+using namespace std;
+
+void radixSort(int arr[], int n)
+{
+	queue<int> bucket[10];
+	int divisor, idx;
+
+	divisor = 1;
+	for (int i = 0; i < 5; i++)
+	{
+		//cout << i + 1 << "의 자리\n";
+		for (int j = 0; j < n; j++)
+		{
+			bucket[(arr[j] / divisor) % 10].push(arr[j]);
+			//cout << (arr[j] / divisor) % 10 << " bucket에 push한 값 " << arr[j] << "\n";
+		}
+			
+
+		idx = 0;
+		for (int j = 0; j < 10; j++)
+		{
+			//cout << j << "번 버켓\n";
+			while (!bucket[j].empty())
+			{
+				arr[idx++] = bucket[j].front();
+				//cout << "arr[" << idx - 1 << "]에 " << bucket[j].front() << "삽입\n";
+				bucket[j].pop();
+			}
+		}
+
+		divisor *= 10;
+	}
+}
+
+int main()
+{
+	int arr[10001] = { 0 };
+	int N, inputNum;
+	cin >> N;
+
+	for (int i = 0; i < N; i++)
+	{
+		cin >> inputNum;
+		arr[inputNum]++;
+	}
+
+	for (int i = 1; i <= 10000; i++)
+	{
+		if (arr[i] > 0)
+			for (int j = 0; j < arr[i]; j++)
+				cout << i << "\n";
+	}
+}
+*/
+
+//bj9426 시간초과
+/*
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+	int N, K;
+	int temper[250001];
+	int scope[5001];
+	int sum = 0;
+	int scIdx;
+
+	cin >> N >> K;
+
+	for (int i = 0; i < N; i++)
+		cin >> temper[i];
+
+	for (int i = 0; i < N - K + 1; i++)
+	{
+		scIdx = 0;
+		for (int j = i; j < i + K; j++)
+			scope[scIdx++] = temper[j];
+
+		sort(scope, scope + K);
+		sum += scope[(K + 1) / 2 - 1];
+	}
+
+	cout << sum << "\n";
+}
+*/
+
+/*//세그먼트트리이용 통과
+#include <iostream>
+#define MAX 2500001
+#define maxIdx 65535
+using namespace std;
+
+typedef long long ll;
+
+
+ll sTree[4 * MAX];
+ll arr[MAX];
+
+ll update(ll idx, ll cnt, ll node, ll start, ll end)
+{
+	if (!(idx >= start && idx <= end))
+		return sTree[node];
+
+	if (start == end)
+		return sTree[node] += cnt;
+
+	ll mid = (start + end) / 2;
+
+	return sTree[node] = update(idx, cnt, node * 2, start, mid) +
+		update(idx, cnt, node * 2 + 1, mid + 1, end);
+}
+
+ll getMidNum(ll idx, ll node, ll start, ll end)
+{
+	if (start == end)
+		return start;
+
+	ll mid = (start + end) / 2;
+	if (idx <= sTree[node * 2])
+		return getMidNum(idx, node * 2, start, mid);
+	else
+		return getMidNum(idx - sTree[node * 2], node * 2 + 1, mid + 1, end);
+}
+
+int main()
+{
+	int N, K;
+	cin >> N >> K;
+
+	ll sum = 0;
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
+
+	for (int i = 0; i < K - 1; i++)
+		update(arr[i], 1, 1, 0, maxIdx);
+
+	for (int i = K - 1; i < N; i++)
+	{
+		update(arr[i], 1, 1, 0, maxIdx);
+		sum += getMidNum((K + 1) / 2, 1, 0, maxIdx);
+		update(arr[i - K + 1], -1, 1, 0, maxIdx);
+	}
+
+	cout << sum << "\n";
+}
+*/
+
+
+//bj2108 오버해서 작성했더니 틀린곳도 못찾음.
+/*
+#include <iostream>
+#include <math.h>
+#define MAX 500001
+#define maxIdx 4001
+using namespace std;
+
+typedef long long ll;
+
+ll sTree[4 * MAX];
+ll arr[MAX];
+
+int temp;
+ll maxi = 0;
+ll mostIdx = -5000;
+
+ll update(ll idx, ll cnt, ll node, ll start, ll end)
+{
+	if (!(start <= idx && idx <= end))
+	{
+		//cout << "sTree[" << node << "] return\n";
+		return sTree[node];
+	}
+
+	if (start == end)
+	{
+		if (sTree[node] + 1 > maxi)
+			maxi = sTree[node] + 1;
+
+		return sTree[node] += cnt;
+	}
+
+	ll mid = (start + end) / 2;
+	if ((start + end) < 0)
+		if (-(start + end) % 2 == 1)
+			mid -= 1;
+
+	return sTree[node] = update(idx, cnt, node * 2, start, mid) +
+		update(idx, cnt, node * 2 + 1, mid + 1, end);
+}
+
+ll getMidNum(ll idx, ll node, ll start, ll end)
+{
+	if (start == end)
+		return start;
+
+	ll mid = (start + end) / 2;
+	if ((start + end) < 0)
+		if (-(start + end) % 2 == 1)
+			mid -= 1;
+
+	if (idx <= sTree[node * 2])
+		return getMidNum(idx, node * 2, start, mid);
+	else
+		return getMidNum(idx - sTree[node * 2], node * 2 + 1, mid + 1, end);
+}
+
+ll searchNode(ll idx, ll node, ll start, ll end)
+{
+	if (start == end)
+		return sTree[node];
+
+	ll mid = (start + end) / 2;
+	if ((start + end) < 0)
+		if (-(start + end) % 2 == 1)
+			mid -= 1;
+
+	if (idx <= sTree[node * 2])
+		return searchNode(idx, node * 2, start, mid);
+	else
+		return searchNode(idx - sTree[node * 2], node * 2 + 1, mid + 1, end);
+}
+
+int main()
+{
+	int N;
+	double sum, avg;
+	cin >> N;
+
+	sum = 0;
+	avg = 0;
+
+	for (int i = 0; i < N; i++)
+	{
+		cin >> arr[i];
+		sum += arr[i];
+		update(arr[i], 1, 1, -maxIdx, maxIdx);
+	}
+
+	bool mManyFlag = false;
+	for (int i = 1; i <= N; i++)
+	{
+		if (searchNode(i, 1, -maxIdx, maxIdx) == maxi)
+		{
+			if (!mManyFlag)
+				mManyFlag = true;
+			else
+			{
+				mostIdx = getMidNum(i, 1, -maxIdx, maxIdx);
+				break;
+			}
+		}
+	}
+
+	avg = sum / N;//산술평균
+	cout << floor(avg + 0.5) << "\n";
+	cout << getMidNum((N % 2 == 0 ? N / 2 : N / 2 + 1), 1, -maxIdx, maxIdx) << "\n";//중앙
+	cout << mostIdx << "\n";//최빈
+	cout << getMidNum(N, 1, -maxIdx, maxIdx) - getMidNum(1, 1, -maxIdx, maxIdx) << "\n";//범위
+}
+
+*/
+/*
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+	int arr[500001];
+	int idxCnt[8001] = { 0 };
+	int N, maxNum, midNum, subMinMax;
+	double sum, avg;
+
+	cin >> N;
+
+	sum = 0;
+	maxNum = -432;
+
+	for (int i = 0; i < N; i++)
+	{
+		cin >> arr[i];
+		sum += arr[i];
+		
+		idxCnt[arr[i] + 4000]++;
+		if (idxCnt[arr[i] + 4000] > maxNum)
+		{
+			maxNum = idxCnt[arr[i] + 4000];
+		}
+			
+	}
+
+	//산평
+	avg = sum / (double)N;
+	avg = floor(avg + 0.5);
+
+	//중앙
+	sort(arr, arr + N);
+	midNum = arr[N / 2];
+
+	//최빈
+	bool mFlag = false;
+	int temp = 0;
+	for (int i = 0; i <= 8000; i++)
+	{
+		if (idxCnt[i] == maxNum)
+		{
+			if (!mFlag)
+			{
+				mFlag = true;
+				temp = i - 4000;
+			}
+			else
+			{
+				maxNum = i - 4000;
+				mFlag = false;
+				break;
+			}
+		}
+	}
+	if (mFlag)
+		maxNum = temp;
+
+	//범위
+	subMinMax = arr[N - 1] - arr[0];
+
+	cout << avg << "\n";
+	cout << midNum << "\n";
+	cout << maxNum << "\n";
+	cout << subMinMax << "\n";
+}
+
+*/
+
+//bj1181
+/*
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+bool cmp(string a, string b)
+{
+	if (a.length() == b.length())
+		return a < b;
+
+	return a.length() < b.length();
+}
+
+int main()
+{
+	int n;
+	string a[20001];
+
+	cin >> n;
+
+	for (int i = 0; i < n; i++)
+		cin >> a[i];
+
+	sort(a, a + n, cmp);
+
+	for (int i = 0; i < n; i++)
+		if (a[i] != a[i + 1])
+			cout << a[i] << '\n';
+}
+*/
+
+//소수
+/*
+#include <iostream>
+using namespace std;
+
+int notPrime[1001] = { 0 };
+
+void eratos(int  N)
+{
+	notPrime[1] = 1;
+	for (int i = 2; i*i <= N; i++)
+	{
+		if (notPrime[i] == 0)
+		{
+			for (int j = i*i; j <= N; j += i)
+				notPrime[j] = 1;
+		}
+	}
+}
+
+int main()
+{
+	int n, inNum, cnt;
+	cin >> n;
+
+	eratos(1000);
+	cnt = 0;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> inNum;
+		if (!notPrime[inNum])
+			cnt++;
+	}
+
+	cout << cnt << "\n";
+}
+*/
+
+//DATE-->0902
+
+
+//bj 9020
+/*
+#include <iostream>
+#define MAX 10001
+using namespace std;
+
+int notPrime[MAX] = { 0 };
+
+void eratos(int  N)
+{
+	notPrime[1] = 1;
+	for (int i = 2; i*i < N; i++)
+	{
+		if (notPrime[i] == 0)
+		{
+			for (int j = i*i; j < N; j += i)
+				notPrime[j] = 1;
+		}
+	}
+}
+
+int main()
+{
+	int n, inNum;
+	eratos(MAX);
+
+	cin >> n;
+
+	int mid, up, down;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> inNum;
+		
+		mid = inNum / 2;
+		
+		up = mid;
+		down = mid;
+
+		for (int j = 0; j < mid; j++)
+		{
+			if (!notPrime[up] && !notPrime[down])
+			{
+				cout << down << " " << up << "\n";
+				break;
+			}
+			up++;
+			down--;
+		}
+	}
+}
+
+*/
+
+//bj1874 시간초과
+/*
+#include <iostream>
+#include <stack>
+using namespace std;
+
+int main()
+{
+	stack<int> mStack;
+	
+	int t, inNum;
+	int idx = 1;
+	int stackIdx = 0;
+
+	cin >> t;
+
+	mStack.push(0);
+	while (t--)
+	{
+		cin >> inNum;
+
+		if (inNum > mStack.top())
+		{
+			for (int i = idx; i <= inNum; i++)
+			{
+				mStack.push(i);
+				cout << "+\n";
+			}
+			idx = inNum + 1;
+		}
+
+		if (inNum == mStack.top())
+		{
+			mStack.pop();
+			cout << "-\n";
+		}
+		else {
+			cout << "NO\n";
+			break;
+		}
+	}
+}
+*/
+
+
+//bj 1260 dfs bfs 스택과 큐
+
+/*
+#include <iostream>
+#include <queue>
+#define MAX 1000 + 1
+
+using namespace std;
+
+int n;
+int visit[MAX];
+int graph[MAX][MAX];
+
+void dfs(int num)
+{
+	cout << num << " ";
+
+	for (int i = 1; i <= n; i++)
+	{
+		if (graph[num][i] && visit[i] == 0)
+		{
+			visit[i] = 1;
+			dfs(i);
+		}
+	}
+}
+
+void bfs(int num)
+{
+	queue<int> que;
+
+	for (int i = 1; i <= n; i++)
+		visit[i] = 0;
+
+	que.push(num);
+	visit[num] = 1;
+
+	while (!que.empty())
+	{
+		int viNum = que.front();
+		que.pop();
+		cout << viNum << " ";
+
+		for (int i = 1; i <= n; i++)
+		{
+			if (graph[viNum][i] && visit[i] == 0)
+			{
+				visit[i] = 1;
+				que.push(i);
+			}
+		}
+	}
+}
+
+int main()
+{
+	int m, start;
+	int fr, to;
+
+	cin >> n >> m >> start;
+
+	for (int i = 0; i < m; i++)
+	{
+		cin >> fr >> to;
+
+		graph[fr][to] = graph[to][fr] = 1;
+	}
+
+	visit[start] = 1;
+	dfs(start);
+	cout << "\n";
+	bfs(start);
+	cout << "\n";
+}
+
+*/
+
+
+//deque
+//bj1021
+/*
+#include <iostream>
+#include <deque>
+using namespace std;
+
+int main()
+{
+	int n, m, arr[51] = { 0 }, rst = 0, lCnt, rCnt;
+	deque<int> nQ, lQ, rQ;
+
+	cin >> n >> m;
+
+	for (int i = 1; i <= n; i++)
+		nQ.push_back(i);
+
+	for (int i = 0; i < m; i++)
+	{
+		lCnt = rCnt = 0;
+		cin >> arr[i];
+		if (arr[i] == nQ.front())
+		{
+			nQ.pop_front();
+			continue;
+		}
+
+		lQ.clear();
+		rQ.clear();
+		lQ = rQ = nQ;
+		nQ.clear();
+
+		while (lQ.front() != arr[i])
+		{
+			lQ.push_back(lQ.front());
+			lQ.pop_front();
+			lCnt++;
+		}
+		lQ.pop_front();
+
+		while (rQ.front() != arr[i])
+		{
+			rQ.push_front(rQ.back());
+			rQ.pop_back();
+			rCnt++;
+		}
+		rQ.pop_front();
+
+		if (lCnt < rCnt)
+		{
+			nQ = lQ;
+			rst += lCnt;
+		}
+		else
+		{
+			nQ = rQ;
+			rst += rCnt;
+		}
+	}
+
+	cout << rst << "\n";
+}
+
+*/
+
+//-->DATE 0910
+//bj2747 메모이제이션 피보나치
+/*
+#include <iostream>
+using namespace std;
+
+int memo[50];
+int fibo(int n)
+{
+	if (n <= 1)
+		return n;
+	else if (memo[n] != 0)
+		return memo[n];
+	else
+		return memo[n] = fibo(n - 2) + fibo(n - 1);
+}
+
+int main()
+{
+	int n;
+	cin >> n;
+	cout << fibo(n) << "\n";
+
+	return 0;
+}
+*/
+
+//bj11051 이항계수
+/*
+#include <iostream>
+using namespace std;
+
+long long combi[1001][1001];
+int main()
+{
+	int n, k;
+	cin >> n >> k;
+
+	combi[0][0] = 1;
+
+	for (int i = 1; i <= n; i++)
+		combi[i][0] = combi[i][i] = 1;
+
+	for (int i = 2; i <= n; i++)
+		for (int j = 1; j <= (i - 1); j++)
+			combi[i][j] = (combi[i - 1][j - 1] + combi[i - 1][j]) % 10007;
+
+	cout << combi[n][k] << "\n";
+
+	return 0;
+}
+
+*/
+
+//bj10844
+/*
+
+#include <iostream>
+#define MOD 1000000000
+using namespace std;
+
+int main()
+{
+	int n, sum = 0;
+	int number[101][10] = { 0 };
+
+	cin >> n;
+
+	for (int i = 0; i < 10; i++)
+		number[1][i] = 1;
+
+	for (int i = 2; i <= n; i++)
+	{
+		number[i][0] = number[i - 1][1] % MOD;
+		number[i][9] = number[i - 1][8] % MOD;
+		for (int j = 1; j <= 8; j++)
+			number[i][j] = (number[i - 1][j - 1] + number[i - 1][j + 1]) % MOD;
+	}
+
+	for (int i = 1; i < 10; i++)
+		sum  = (sum + number[n][i]) % MOD;
+
+	cout << sum << "\n";
+}
+
+*/
+
+//bj1005 시간초과 해결불가
+//#include <iostream>
+//using namespace std;
+//
+//struct building
+//{
+//	int bTime;
+//	int maxIdx = 0;
+//	int maxTime = 0;
+//}typedef building;
+//
+//int main()
+//{
+//	building bd[1001];
+//	int t, n, k, x, y, w, sum;
+//
+//	cin >> t;
+//	for (int i = 0; i < t; i++)
+//	{
+//		cin >> n >> k;
+//		for (int j = 1; j <= n; j++)
+//			cin >> bd[j].bTime;
+//
+//		for (int j = 1; j <= k; j++)
+//		{
+//			cin >> x >> y;
+//			if (bd[x].bTime > bd[y].maxTime)
+//			{
+//				bd[y].maxTime = bd[x].bTime;
+//				bd[y].maxIdx = x;
+//			}
+//		}
+//
+//		cin >> w;
+//
+//		sum = bd[w].bTime;
+//		while (1)
+//		{
+//			if (bd[w].maxIdx == 1)
+//				break;
+//
+//			sum += bd[w].maxTime;
+//			w = bd[w].maxIdx;
+//		}
+//
+//		sum += bd[1].bTime;
+//		cout << sum << "\n";
+//	}
+//}
+
+//#include <iostream>
+//using namespace std;
+//
+//int fti[1001][3] = { 0 };
+////0 btime
+////1 maxTime
+////2 maxIdx
+//
+//void init()
+//{
+//	for (int i = 0; i < 1001; i++)
+//		for (int j = 0; j < 3; j++)
+//			fti[i][j] = 0;
+//}
+//
+//int main()
+//{
+//	int t, n, k, x, y, w, sum;
+//
+//	cin >> t;
+//	for (int i = 0; i < t; i++)
+//	{
+//		cin >> n >> k;
+//
+//		init();
+//
+//		for (int j = 1; j <= n; j++)
+//			cin >> fti[j][0];
+//
+//		for (int j = 1; j <= k; j++)
+//		{
+//			cin >> x >> y;
+//			if (fti[x][0] > fti[y][1])
+//			{
+//				fti[y][1] = fti[x][0];
+//				fti[y][2] = x;
+//			}
+//		}
+//
+//		cin >> w;
+//
+//		sum = fti[w][0];
+//		while (1)
+//		{
+//			if (fti[w][2] == 1)
+//				break;
+//
+//			sum += fti[w][1];
+//			w = fti[w][2];
+//		}
+//
+//		sum += fti[1][0];
+//		cout << sum << "\n";
+//	}
+//}
+
+
+//bj1520 시간초과
+/*
+#include <iostream>
+using namespace std;
+
+int goMap[501][501] = { 0 };
+int dp[501][501] = { 0 };
+int nextCol[4] = { -1, 0, 1, 0};//위오아왼 (세로)
+int nextRow[4] = { 0, 1, 0, -1};
+int m, n, nC, nR;
+
+int solve(int col, int row)
+{
+	if (col == m && row == n)
+		return 1;
+
+	if (dp[col][row] != 0)
+		return dp[col][row];
+	
+	for (int i = 0; i < 4; i++)
+	{
+		nC = col + nextCol[i];
+		nR = row + nextRow[i];
+
+		if ((1 <= nC && nC <= m) && (1 <= nR && nR <= n) &&
+			goMap[col][row] > goMap[nC][nR])
+			dp[col][row] += solve(nC, nR);
+	}
+
+	return dp[col][row];
+}
+
+
+int main()
+{
+	cin >> m >> n;
+
+	for (int i = 1; i <= m; i++)
+		for (int j = 1; j <= n; j++)
+			cin >> goMap[i][j];
+
+	cout << solve(1, 1) << "\n";
+
+	return 0;
+}
+
+*/
+
+//bj11066
+/*
+#include <iostream>
+using namespace std;
+
+int chap[509];
+int chaSum[509];
+int dp[509][509];
+
+int min(int a, int b)
+{
+	return a < b ? a : b;
+}
+
+int main()
+{
+	int t, k;
+	cin >> t;
+
+	for (int i = 0; i < t; i++)
+	{
+		cin >> k;
+		for (int j = 1; j <= k; j++)
+		{
+			cin >> chap[j];
+			chaSum[j] = chap[j] + chaSum[j - 1];
+		}
+
+		for (int j = 1; j < k; j++)
+		{
+			for (int x = 1; j + x <= k; x++)
+			{
+				int y = j + x;
+				dp[x][y] = 999999999;
+
+				for (int mid = x; mid < y; mid++)
+					dp[x][y] =
+						min(dp[x][y], dp[x][mid] + dp[mid + 1][y] + (chaSum[y] - chaSum[x - 1]));
+			}
+		}
+		
+		cout << dp[1][k] << "\n";
+	}
+
+	return 0;
+}
+*/
+
