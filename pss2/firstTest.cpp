@@ -3251,3 +3251,1017 @@ int main()
 }
 */
 
+
+//->DATE0912
+//bj1992 오답
+/*
+#include <iostream>
+using namespace std;
+
+int quad[65][65];
+
+void solve(int r, int c, int num)
+{
+	int temp = quad[r][c];
+	bool flag = false;
+
+	for (int i = r; i < r + num; i++)
+	{
+		for (int j = c; j < c + num; j++)
+		{
+			if (quad[i][j] != temp)
+			{
+				flag = true;
+				break;
+			}
+		}
+		
+		if (flag)
+			break;
+	}
+
+	if (flag)
+	{
+		int nNum = num / 2;
+		
+		cout << "(";
+		solve(r, c, nNum);
+		solve(r, c + nNum, nNum);
+		solve(r + nNum, c, nNum);
+		solve(r + nNum, c + nNum, nNum);
+		cout << ")";
+		
+	}
+	else
+		cout << temp;
+}
+
+int main ()
+{
+	int n;
+	
+	cin >> n;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= n; j++)
+			cin >> quad[i][j];
+
+	solve(1, 1, n);
+}
+*/
+
+//bj1074 왜 틀린지 모르겠음 너무 조건이 까다로움
+
+/*
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+typedef long long ll;
+
+ll solve(ll row, ll col, ll rst)
+{
+	ll i = 1, j = 1, inI = 1, inJ = 1, tmpI, tmpJ;
+
+	while (1 < row && i <= row) i *= 2;
+	while (1 < col && j <= col) j *= 2;
+
+	i /= 2; j /= 2;
+	tmpI = i; tmpJ = j;
+
+	if (i != 0)
+	{
+		while (i--)
+			inI *= 2;
+		rst += inI * 2;
+	}
+		
+	if (j != 0)
+	{
+		while (j--)
+			inJ *= 2;
+		rst += inJ;
+	}
+
+	row -= tmpI; col -= tmpJ;
+
+	if (row >= 2 || col >= 2)
+		rst = solve(row, col, rst);
+	else
+	{
+		if (row == 1)
+			rst += 2;
+		if (col == 1)
+			rst += 1;
+	}
+
+	return rst;
+}
+
+int main()
+{
+	ll N, r, c, i = 1, j = 1;
+
+	
+	while(cin >> N >> r >> c)
+		cout << solve(r, c, 0) << "\n";
+}
+
+*/
+
+
+//-->DATE0913
+
+/*bj7569*/
+/*
+#include <iostream>
+#include <queue>
+using namespace std;
+
+struct tomQu {
+	int r, c, h;
+	int cnt = 0;
+}typedef tomQu;
+
+int main()
+{
+	int M, N, H;
+	int toma[101][101][101];
+	int dirH[6] = { 1, -1, 0, 0, 0, 0 };
+	int dirR[6] = { 0, 0, 1, -1, 0, 0 };
+	int dirC[6] = { 0, 0, 0, 0, 1, -1 };
+	queue<tomQu> q;
+
+	cin >> M >> N >> H;
+	
+	int totalTom = 0;
+	for (int i = 1; i <= H; i++)
+		for (int j = 1; j <= N; j++)
+			for (int k = 1; k <= M; k++)
+			{
+				cin >> toma[i][j][k];
+				if (toma[i][j][k] == 0)
+					totalTom++;
+
+				tomQu theToma;
+				theToma.h = i;
+				theToma.r = j;
+				theToma.c = k;
+				if (toma[i][j][k] == 1)
+				{
+					q.push(theToma);
+					//cout << "push : " << i << " " << j << " " << k << "\n";
+				}
+			}
+
+	//cout << "totalTom : " << totalTom << "\n";
+
+	if (totalTom == 0)
+	{
+		cout << 0 << "\n";
+		return 0;
+	}
+	
+	int topCnt = 0;
+	while (!q.empty())
+	{
+		tomQu temp = q.front();
+		//cout << "pop : " << temp.h << " " << temp.r << " " << temp.c << "\n";
+		q.pop();
+		if (temp.cnt > topCnt)
+			topCnt = temp.cnt;
+
+		for (int i = 0; i < 6; i++)
+		{
+			int nH = temp.h + dirH[i];
+			int nR = temp.r + dirR[i];
+			int nC = temp.c + dirC[i];
+
+			if (!(1 <= nH && nH <= H) ||
+				!(1 <= nR && nR <= N) ||
+				!(1 <= nC && nC <= M))
+				continue;
+
+			if (toma[nH][nR][nC] == 0)
+			{
+				toma[nH][nR][nC] = 1;
+				tomQu theToma;
+				theToma.h = nH;
+				theToma.r = nR;
+				theToma.c = nC;
+				theToma.cnt = temp.cnt + 1;
+				q.push(theToma);
+				//cout << "push : " << nH << " " << nR << " " << nC << "\n";
+
+				totalTom--;
+			}
+		}
+	}
+
+	if (totalTom > 0)
+		cout << -1 << "\n";
+	else
+		cout << topCnt << "\n";
+}
+*/
+
+//bj2252 위상정렬
+/*
+#include <iostream>
+#include <stack>
+#include <queue>
+using namespace std;
+
+struct stde
+{
+	int number = -1;
+	queue<int> to;
+};
+
+stde students[32001];
+stack<int> rst;
+int visit[32001] = { 0 };
+
+int popQueue(queue<int> * q)
+{
+	if (!(q->empty()))
+	{
+		int temp = q->front();
+		q->pop();
+		return temp;
+	}
+	else
+		return -1;
+}
+
+void dfs(int stNum)
+{
+	//cout << "visit : " << stNum << "\n";
+	if (visit[stNum] == 0)
+		visit[stNum] = 1;
+	else
+		return;
+
+	int nextStu;
+
+	while ((nextStu = popQueue(&(students[stNum].to))) != -1)
+	{
+		if (visit[nextStu] == 0)
+			dfs(nextStu);
+	}
+
+	rst.push(stNum);
+}
+
+int main()
+{
+	int N, M, A, B;
+
+	cin >> N >> M;
+
+	for (int i = 0; i < M; i++)
+	{
+		cin >> A >> B;
+		students[A].number = A;
+		students[A].to.push(B);
+	}
+
+	for (int i = 1; i <= N; i++)
+		dfs(i);
+
+	while (!rst.empty())
+	{
+		cout << rst.top() << " ";
+		rst.pop();
+	}
+}
+
+*/
+
+//-->Date 0914
+//bj1753
+/*
+#include <iostream>
+#include <vector>
+#include <queue>
+#define MAXV 20001
+#define INF 999999999
+using namespace std;
+
+struct graph {
+	int to, val;
+}typedef Graph;
+
+struct pqVal {
+	int gNum;
+	int distance = INF;
+};
+
+struct cmp//우선순위큐 비교기준 오버로딩
+{
+	bool operator()(pqVal a, pqVal b)
+	{
+		return a.distance > b.distance;//작은거부터 나옴
+	}
+
+};
+
+vector<Graph> vg[MAXV];
+priority_queue<pqVal, vector<pqVal>, cmp> q;
+int dist[MAXV];
+bool visit[MAXV];
+
+int main()
+{
+	int V, E, K, u, v, w;
+	Graph temp;
+	pqVal start;
+
+	cin >> V >> E >> K;
+
+	for (int i = 0; i < E; i++)
+	{
+		cin >> u >> v >> w;
+		temp.to = v;
+		temp.val = w;
+		vg[u].push_back(temp);
+	}
+
+	for (int i = 1; i <= V; i++)
+	{
+		dist[i] = INF;
+		visit[i] = false;
+	}
+
+	dist[K] = 0;
+	start.distance = 0; start.gNum = K;
+	q.push(start);
+	
+	while (!q.empty())
+	{
+		int curNum = q.top().gNum;
+		//cout << "curNum : " << curNum << "\n";
+		q.pop();
+
+		if (visit[curNum])
+			continue;
+		else
+			visit[curNum] = true;
+
+		for (auto in : vg[curNum])
+		{
+			//cout << "in.to : " << in.to << "\n";
+			//cout << "<<<  " << dist[in.to] << " " << (dist[curNum] + in.val) << "\n";
+			if (dist[in.to] > (dist[curNum] + in.val))
+			{
+				dist[in.to] = dist[curNum] + in.val;
+				start.distance = dist[in.to]; start.gNum = in.to;
+				//cout << "push " << in.to << "\n";
+				q.push(start);
+			}
+		}
+	}
+
+	for (int i = 1; i <= V; i++)
+	{
+		if (dist[i] == INF)
+			cout << "INF" << "\n";
+		else
+			cout << dist[i] << "\n";
+	}
+}
+
+*/
+
+
+
+//-->Date0916 카카오
+
+
+//1번
+//#include <iostream>
+//#include <string>
+//#include <vector>
+//#include <bitset>
+//
+//using namespace std;
+//
+//int main()
+//{
+//	vector<int> arr1, arr2;
+//	vector<int> tranMap;
+//
+//	arr1.push_back(9);
+//	arr2.push_back(30);
+//
+//	bitset<16> bit = (arr1[0] | arr2[0]);
+//	string rst = bit.to_string();
+//	vector<string> ret;
+//
+//	int n = 5;
+//	char temp;
+//	string tempStr = "";
+//
+//
+//	for (int i = 16 - n; i < 16; i++)
+//	{
+//		temp = rst.at(i);
+//		
+//		if (temp == '0')
+//			tempStr += " ";
+//		else
+//			tempStr += "#";
+//	}
+//
+//	cout << tempStr << "\n";
+//
+//	/*for (int i = 0; i < arr1.size(); i++)
+//	{
+//		tranMap[i] = arr1[i] | arr2[i];
+//	}
+//
+//	cout << tranMap[0] << "\n";*/
+//
+//	return 0;
+//}
+//
+//
+////vector<string> solution(int n, vector<int> arr1, vector<int> arr2) {
+////	vector<string> answer;
+////	bitset<16> bit;
+////
+////	for (int i = 0; i < arr1.size(); i++)
+////	{
+////		bit = (arr1[i] | arr2[i]);
+////		string tmpStr = bit.to_string();
+////		string retStr = "";
+////		char temp;
+////
+////		for (int j = 16 - n; j < 16; j++)
+////		{
+////			temp = tmpStr.at(j);
+////
+////			if (temp == '0')
+////				retStr += " ";
+////			else
+////				retStr += "#";
+////		}
+////
+////		answer.push_back(retStr);
+////	}
+////
+////	return answer;
+////}
+
+
+//2번
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//
+//int solution(string dartResult) {
+//	int answer = 0;
+//	char temp;
+//	int tempAsc;
+//	int tmpNum = -1;
+//	int scr[3] = { 0 };
+//	int tmpScr[3] = { 0 };
+//	int j = 0;
+//	int k = 0;
+//
+//	for (int i = 0; i < dartResult.size(); i++)
+//	{
+//		temp = dartResult.at(i);
+//		cout << temp << "\n";
+//		int tmpNum = -1;
+//		switch (temp)
+//		{
+//		case '0':
+//				tmpNum = 0;
+//				break;
+//		case '1':
+//			if (dartResult.at(i + 1) == '0')
+//			{
+//				tmpNum = 10;
+//				i++;
+//			}
+//			else
+//				tmpNum = 1;
+//			break;
+//		case '2':
+//			tmpNum = 2;
+//			break;
+//		case '3':
+//			tmpNum = 3;
+//			break;
+//		case '4':
+//			tmpNum = 4;
+//			break;
+//		case '5':
+//			tmpNum = 5;
+//			break;
+//		case '6':
+//			tmpNum = 6;
+//			break;
+//		case '7':
+//			tmpNum = 7;
+//			break;
+//		case '8':
+//			tmpNum = 8;
+//			break;
+//		case '9':
+//			tmpNum = 9;
+//			break;
+//		}
+//		//cout << "tmpNum : " << tmpNum << "\n";
+//
+//		if (tmpNum != -1)
+//		{
+//			tmpScr[j++] = tmpNum;
+//			cout << "tmpScr[" << j - 1 << "] = " << tmpScr[j - 1] << "\n";
+//		}
+//		
+//		tempAsc = char(temp);
+//		
+//		cout << "tempAsc" << tempAsc << "\n";
+//		int sFlag = -1;
+//
+//		switch (tempAsc)
+//		{
+//		case 83://S
+//			scr[k++] += tmpScr[j - 1];
+//			break;
+//		case 68://D
+//			scr[k++] += (tmpScr[j - 1] * tmpScr[j - 1]);
+//			break;
+//		case 84://T
+//			scr[k++] += (tmpScr[j - 1] * tmpScr[j - 1] * tmpScr[j - 1]);
+//			break;
+//		case 42://*
+//			if (j == 1)
+//				scr[0] *= 2;
+//			else
+//			{
+//				if (sFlag != -1)
+//					scr[sFlag] -= scr[sFlag];
+//				else
+//				{
+//					scr[k - 2] *= 2;
+//					scr[k - 1] *= 2;
+//				}
+//			}
+//			break;
+//		case 35://#
+//			scr[k - 1] -= (scr[k - 1] * 2);
+//			sFlag = k - 1;
+//			break;
+//		}
+//	}
+//
+//	answer = scr[0] + scr[1] + scr[2];
+//
+//	return answer;
+//}
+//
+//
+//
+//int main()
+//{
+//	string test = "1D2S#10S";
+//
+//	cout << solution(test) << "\n";
+//	
+//	return 0;
+//}
+
+//3번
+//
+//#include <iostream>
+//#include <string>
+//#include <vector>
+//#include <cctype>
+//#include <algorithm>
+//
+//using namespace std;
+//
+//int solution(int cacheSize, string cities[]) {
+//	int answer = 0;
+//	string cache[30];
+//	int head = 0, tail = cacheSize - 1;
+//	int least = 0;
+//	
+//	for (int i = 0; i < 4; i++)
+//	{
+//		transform(cities[i].begin(), cities[i].end(), cities[i].begin(), ::toupper);
+//
+//		bool flag = false;
+//		for (int j = 0; j < head; j++)
+//		{
+//			if (cache[j].compare(cities[i]) == 0)
+//			{
+//				cout << cache[j] << "  -- hit\n";
+//				answer += 1;
+//				string temp = cache[j];
+//				for (int k = j; k < head - 1; k++)
+//					cache[k] = cache[k + 1];
+//
+//				cache[head - 1] = temp;
+//				flag = true;
+//
+//				cout << "head : " << head << "\n";
+//				cout << "히트 후 캐쉬상황 : ";
+//				for (int i = 0; i < cacheSize; i++)
+//					cout << cache[i] << " ";
+//				cout << "\n";
+//
+//
+//				break;
+//			}
+//		}
+//
+//		if (flag)
+//			continue;
+//		
+//		if (head <= tail)
+//			cache[head++] = (cities[i]);
+//		else
+//		{
+//			for (int j = 0; j < tail; j++)
+//			{
+//				cache[j] = cache[j + 1];
+//			}
+//			cache[head - 1] = cities[i];
+//		}
+//
+//		cout << "캐쉬상황 : ";
+//		for (int i = 0; i < cacheSize; i++)
+//			cout <<cache[i] << " ";
+//		cout << "\n";
+//		answer += 5;
+//	}
+//
+//	return answer;
+//}
+//
+//
+//
+//int main()
+//{
+//	string test[9] = {"Jeju", "Pangyo", "NewYork", "newyork"};
+//
+//	cout << solution(2, test) << "\n";
+//
+//	return 0;
+//}
+
+
+//4번
+//#include <string>
+//#include <vector>
+//#include <iostream>
+//
+//using namespace std;
+//
+//string solution(int n, int t, int m, string timetable[], int rr) {
+//	string answer = "";
+//	int maxNum = m;
+//	int time = 900;
+//	int inTime;
+//	int fHou, fMin;
+//	int inNum = 0;
+//	int maxTime = -1;
+//	int answerInt = 0;
+//
+//	for (int i = 0; i < rr; i++)
+//	{
+//		inTime = 0;
+//		inTime += (atoi((timetable[i].substr(0, 2)).c_str())) * 100;
+//		inTime += atoi((timetable[i].substr(3, 2)).c_str());
+//
+//		cout << "inTime : " << inTime << "\n";
+//		if (inTime <= time)
+//		{
+//			inNum++;
+//			if (inTime > maxTime)
+//				maxTime = inTime;
+//		}
+//
+//		if (maxNum == inNum)
+//		{
+//			n--;
+//			inNum = 0;
+//			time += t;
+//			if (time % 100 >= 60)
+//			{
+//				time += 100;
+//				time -= 60;
+//			}
+//		}
+//
+//		if (n < 0)
+//		{
+//			answerInt = maxTime - 1;
+//			break;
+//		}
+//	}
+//
+//	for (int i = 1; i <= n - 1; i++)
+//	{
+//		time += t;
+//		if (time % 100 >= 60)
+//		{
+//			time += 100;
+//			time -= 60;
+//		}
+//	}
+//	
+//	answerInt = time;
+//
+//	string tempStr = to_string(answerInt);
+//
+//	if (tempStr.size() == 3)
+//		tempStr.insert(0, "0");
+//
+//	tempStr.insert(2, ":");
+//
+//	answer = tempStr;
+//
+//	return answer;
+//}
+//
+//int main()
+//{
+//	string arr[3] = { "09:10", "09:09", "08:00" };
+//	string rst = solution(2, 10, 2, arr, 3);
+//	
+//
+//	cout << rst << "\n";
+//	return 0;
+//}
+
+//#include <string>
+//#include <cctype>
+//#include <algorithm>
+//#include <vector>
+//#include <iostream>
+//
+//using namespace std;
+//
+//int solution(string str1, string str2) {
+//	int answer = 0;
+//	vector<string> sub1, sub2;
+//
+//	transform(str1.begin(), str1.end(), str1.begin(), ::toupper);
+//	transform(str2.begin(), str2.end(), str2.begin(), ::toupper);
+//
+//	string temp;
+//	for (int i = 0; i < str1.size() - 1; i++)
+//	{
+//		temp = str1.substr(i, 2);
+//		if (char(str1.at(i)) < 65 || 90 < char(str1.at(i)) ||
+//			char(str1.at(i + 1)) < 65 || 90 < char(str1.at(i + 1)))
+//			continue;
+//
+//		sub1.push_back(temp);
+//	}
+//
+//	for (int i = 0; i < str2.size() - 1; i++)
+//	{
+//		temp = str2.substr(i, 2);
+//		if (char(str2.at(i)) < 65 || 90 < char(str2.at(i)) ||
+//			char(str2.at(i + 1)) < 65 || 90 < char(str2.at(i + 1)))
+//			continue;
+//
+//		sub2.push_back(temp);
+//	}
+//
+//
+//
+//	return answer;
+//}
+//
+//int main()
+//{
+//	string str1 = "e=m*c^2";
+//
+//	transform(str1.begin(), str1.end(), str1.begin(), ::toupper);
+//
+//	cout << str1 << "\n";
+//}
+
+
+//#include <string>
+//#include <vector>
+//#include <iostream>
+//
+//using namespace std;
+//
+//int solution(int m, int n, vector<string> board) {
+//	int answer = 0;
+//	char pan[31][31] = { 0 };
+//	int delPan[31][31] = { 0 };
+//
+//	for (int i = 0; i < board.size(); i++)
+//	{
+//		for (int j = 0; j < n; j++)
+//		{
+//			pan[i][j] = board[i].at(j);
+//		}
+//	}
+//
+//	bool eFlag = true;
+//	int sts = 3;
+//	while (sts--)
+//	{
+//		for (int i = 0; i < 31; i++)
+//			delPan[i][i] = 0;
+//		cout << sts << "---------\n";
+//		if (eFlag == false)
+//			break;
+//		eFlag = false;
+//
+//		for (int i = 0; i < m - 1; i++)
+//		{
+//			for (int j = 0; j < n - 1; j++)
+//			{
+//				if (pan[i][j] == pan[i][j + 1] && pan[i][j] == pan[i + 1][j + 1] &&
+//					pan[i][j] == pan[i + 1][j])
+//				{
+//					delPan[i][j] = delPan[i][j + 1] = delPan[i + 1][j + 1] = delPan[i + 1][j] = 1;
+//					cout << "1pan[" << i << "][" << j << "] = " << pan[i][j] <<"\n";
+//				}
+//					
+//			}
+//		}
+//
+//		for (int i = 0; i < m; i++)
+//			for (int j = 0; j < n; j++)
+//				if (delPan[i][j] == 1)
+//				{
+//					eFlag = true;
+//					pan[i][j] = 'd';
+//					answer++;
+//
+//					//cout << "2pan[" << i << "][" << j << "] = " << pan[i][j] << "\n";
+//
+//					int temp = i - 1;
+//					while (temp >= 0)
+//					{
+//						if (pan[temp][j] != 'd')
+//						{
+//							for (int k = i; k > 0; k--)
+//							{
+//								pan[k][j] = pan[k - 1][j];
+//							}
+//							
+//
+//
+//							cout << "3pan[" << i << "][" << j << "] = " << pan[i][j] << "\n";
+//							break;
+//						}
+//						else
+//							temp--;
+//					}
+//				}
+//	}
+//
+//	return answer;
+//}
+//
+//int main()
+//{
+//	vector<string> test({ "CCBDE", "AAADE", "AAABF", "CCBBF" });
+//
+//	cout << solution(4, 5, test) << "\n";
+//}
+
+
+//--> Date 0917
+
+//프로그래머스 148
+/*
+#include<iostream>
+#include<vector>
+using namespace std;
+
+vector<vector<int> > sumMatrix(vector<vector<int> >A, vector<vector<int> >B)
+{
+	vector<vector<int> > answer;
+	
+
+	for (int i = 0; i < A.size(); i++)
+	{
+		int temp =  0;
+		vector<int> subAns;
+
+		for (int j = 0; j < A[i].size(); j++)
+		{
+			temp = (A[i])[j] + (B[i])[j];
+			subAns.push_back(temp);
+		}
+		
+		answer.push_back(subAns);
+	}
+
+	return answer;
+}
+int main()
+{
+	vector<vector<int> > a{ { 1,2 },{ 2,3 },{ 2,3 },{ 2,3 } }, b{ { 3,4 },{ 5,6 },{ 2,3 },{ 2,3 } };
+	vector<vector<int> > answer = sumMatrix(a, b);
+
+	for (int i = 0; i<answer.size(); i++)
+	{
+		for (int j = 0; j<answer[i].size(); j++)
+		{
+			cout << answer[i][j] << " ";
+		}
+		cout << "\n";
+	}
+}
+*/
+
+//프로그래머스149
+/*
+#include<vector>
+#include<iostream>
+using namespace std;
+
+int getGcd(int a, int b)
+{
+	if (b == 0)
+		return a;
+	else
+		return getGcd(b, a % b);
+}
+
+vector<int> gcdlcm(int a, int b)
+{
+	vector<int> answer;
+
+	int gcd = getGcd(a, b);
+	int lcm = a * b / gcd;
+
+	answer.push_back(gcd);
+	answer.push_back(lcm);
+
+	return answer;
+}
+int main()
+{
+	int a = 3, b = 12;
+	vector<int> testAnswer = gcdlcm(a, b);
+
+	cout << testAnswer[0] << " " << testAnswer[1];
+}
+
+*/
+
+//프로그래머스 147
+
+/*
+#include<iostream>
+using namespace std;
+
+long long fibonacci(int n)
+{
+	if (n == 0 || n == 1)
+		return n;
+	else
+		return fibonacci(n - 2) + fibonacci(n - 1);
+}
+
+int main()
+{
+	int testCase = 10;
+	long long testAnswer = fibonacci(testCase);
+
+	cout << testAnswer;
+}
+*/
+
+//프로그래머스 146 약수의 합
+/*
+#include<iostream>
+using namespace std;
+
+int sumDivisor(int n)
+{
+	int ret = 0;
+
+	for (int i = 1; i * i < n; i++)
+		if (n % i == 0)
+			ret += (i + (n / i));
+
+	return ret;
+}
+
+int main()
+{
+	int testCase = 10;
+	int testAnswer = sumDivisor(testCase);
+
+	cout << testAnswer;
+}
+*/
