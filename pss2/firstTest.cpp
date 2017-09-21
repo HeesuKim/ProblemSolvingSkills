@@ -4265,3 +4265,353 @@ int main()
 	cout << testAnswer;
 }
 */
+
+
+//-->Date0919
+//프로그래머스 140 행렬의 곱셉
+/*
+#include<iostream>
+#include<vector>
+using namespace std;
+
+vector<vector<int> >productMatrix(vector<vector<int> >A, vector<vector<int> >B)
+{
+	vector<vector<int> >answer;
+	
+	
+	for (int i = 0; i < A.size(); i++)
+	{
+		vector<int> innerAns;
+		for (int j = 0; j < B[0].size(); j++)
+		{
+			int temp = 0;
+
+			for (int k = 0; k < A[0].size(); k++)
+			{
+				temp += (A[i][k] * B[k][j]);
+				//cout << "temp : " << temp << "\n";
+			}
+
+			//cout << "innerAns : " << temp << "\n";
+			innerAns.push_back(temp);
+		}
+
+		answer.push_back(innerAns);
+	}
+
+	return answer;
+}
+
+int main()
+{
+	vector<vector<int> >A{ { 1,2 },{ 2,3 }, {4,5} };
+	vector<vector<int> >B{ { 2,3,4 },{ 3,4,5 } };
+	vector<vector<int> > testAnswer = productMatrix(A, B);
+
+	for (int i = 0; i<testAnswer.size(); i++)
+	{
+		for (int j = 0; j<testAnswer[i].size(); j++)
+			cout << testAnswer[i][j] << " ";
+		cout << "\n";
+	}
+}
+*/
+
+//프로그래머스 150 콜라츠 추측
+/*
+#include<iostream>
+using namespace std;
+
+int collatz(int num)
+{
+	int answer = 0;
+
+	while (num != 1)
+	{
+		if (num % 2 == 0)
+			num /= 2;
+		else
+			num = (num * 3) + 1;
+
+		answer++;
+
+		if (answer == 500)
+			return -1;
+	}
+
+	return answer;
+}
+
+
+int main()
+{
+	int testCase = 6;
+	int testAnswer = collatz(testCase);
+
+	cout << testAnswer;
+}
+*/
+
+
+//프로그래머스 175 2016년
+/*
+#include<iostream>
+#include<string>
+using namespace std;
+
+string getDayName(int a, int b)
+{
+	string answer = "";
+	string d[7] = { "THU", "FRI", "SAT", "SUN", "MON", "TUE", "WED" };
+
+	int month, day, date = 0;
+
+	for (month = 1; month <= a - 1; month++) {
+		if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+			day = 31;
+		else if (month == 2)
+			day = 29;
+		else
+			day = 30;
+
+		date += day;
+	}
+
+	date += b;
+	date %= 7;
+	answer += d[date];
+
+	return answer;
+}
+int main()
+{
+	int a = 2, b = 29;
+
+	//아래는 테스트 출력을 위한 코드입니다.
+	cout << getDayName(a, b);
+}
+
+*/
+
+
+//프로그래머스 179
+/*
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<functional>
+using namespace std;
+
+int getMinSum(vector<int> A, vector<int> B)
+{
+	int answer = 0;
+	sort(A.begin(), A.end());
+	sort(B.begin(), B.end(), greater<int>());
+
+	for (int i = 0; i < A.size(); i++)
+		answer += A[i] * B[i];
+
+	return answer;
+}
+int main()
+{
+	vector<int> tA{ 1,2 }, tB{ 3,4 };
+
+	//아래는 테스트 출력을 위한 코드입니다.
+	cout << getMinSum(tA, tB);
+}
+*/
+
+//-->Date 0920
+//pg 170 다음 큰 숫자
+
+/*
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int nextBigNumber(int n)
+{
+	int answer = 0;
+
+	int digit[22] = { 0 };
+	int dNum = 0;
+	for (int i = 0; n != 0; i++)
+	{
+		digit[i] = n % 2;
+		n /= 2;
+		dNum++;
+	}
+
+	int tempDig = 0;
+	int oneCnt = 0;
+	bool lastFlag = false;
+	while (1)
+	{
+		if (digit[tempDig] == 1)
+		{
+			oneCnt++;
+			if (digit[tempDig + 1] == 0)
+			{
+				if (tempDig == dNum - 1)
+					dNum++;
+
+				digit[tempDig + 1] = 1;
+				for (int i = tempDig; i >= 0; i--)
+					digit[i] = 0;
+				for (int i = 0; i < (oneCnt - 1); i++)
+					digit[i] = 1;
+
+				break;
+			}
+		}
+		
+		tempDig++;
+	}
+
+	for(int i = 0; i < dNum; i++)
+	{
+		//cout << digit[i] << " ";
+		answer += (pow(2, i) * digit[i]);
+	}
+
+	return answer;
+}
+int main()
+{
+	int n = 78;
+
+	//아래는 테스트 출력을 위한 코드입니다.
+	cout << nextBigNumber(n);
+}
+
+*/
+
+//-->Date 0921
+//NHN모의테스트
+/*
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+struct number
+{
+	int val;
+	int issTen;
+};
+
+int main() {
+	vector<number> inNum;
+	int isTen[10] = { 0 };
+	int sorArr[10] = { 0 };
+
+	int a, id = 0;
+	int tt = 5;
+	while (cin >> a)
+	{
+		number t;
+		t.val = a;
+		t.issTen = 0;
+		if (a >= 10)
+			t.issTen = 1;
+		inNum.push_back(t);
+		cout << "in : " << a << "\n";
+		id++;
+	}
+	
+	int sorIdx = 0;
+	while (!inNum.empty())
+	{
+		int maxVal = (inNum[0].issTen == 1 ? inNum[0].val / 10 : inNum[0].val);
+		int maxId = 0;
+
+		
+		
+		for (int i = 1; i < inNum.size(); i++)
+		{
+			int temp = inNum[i].val;
+
+			if (inNum[i].issTen == 1)
+				temp /= 10;
+
+			
+
+			if (temp > maxVal)
+			{
+				maxVal = temp;
+				maxId = i;
+			}
+			else if (temp == maxVal)
+			{
+				//cout << "ss -- > " << inNum[i].val << " / " << inNum[maxId].val << "\n";
+				if ((inNum[i].issTen == 1 && inNum[maxId].issTen == 1) &&
+					(inNum[i].val % 10 > inNum[maxId].val % 10))
+				{
+					maxVal = temp;
+					maxId = i;
+				}
+				else if ((inNum[maxId].issTen == 1 && inNum[maxId].val % 10 < temp) ||
+					(inNum[i].issTen == 1 && inNum[i].val % 10 > inNum[maxId].val))
+					maxId = i;
+			}
+		}
+		//cout << "maxVal : " << inNum[maxId].val << "\n";
+
+		sorArr[sorIdx++] = inNum[maxId].val;
+		inNum.erase(inNum.begin() + maxId);
+	}
+
+	string temp = "";
+	long long big, small;
+	for (int i = 0; i < id; i++)
+		temp += to_string(sorArr[i]);
+	big = stoll(temp);
+	temp.clear();
+	for (int i = id - 1; i >= 0; i--)
+		temp += to_string(sorArr[i]);
+	small = stoll(temp);
+
+	cout << big + small << "\n";
+
+	return 0;
+}
+*/
+
+//모의시험2번
+//2차원배열 동적할당
+//왜틀리지
+/*
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int N;
+	cin >> N;
+	int** arr = new int* [N];
+	for (int i = 0; i < N; i++)
+		arr[i] = new int[N];
+	
+	for (int i = 0; i < N; i++)
+		for (int j = 0; j < N; j++)
+			cin >> arr[i][j];
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+			cout << arr[j][i] << " ";
+
+		cout << "\n";
+	}
+
+	for (int i = 0; i < N; i++)
+		delete[]arr[i];
+	delete[]arr;
+	
+	return 0;
+}
+*/
+
+
