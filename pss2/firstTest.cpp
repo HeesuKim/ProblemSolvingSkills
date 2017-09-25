@@ -4615,3 +4615,856 @@ int main() {
 */
 
 
+//-->Date 0922
+
+//pg152 N개의 최소공배수
+/*
+#include<iostream>
+#include<vector>
+using namespace std;
+
+typedef long long ll;
+
+ll getGcd(ll a, ll b)
+{
+	if (b == 0)
+		return a;
+	else
+		return getGcd(b, a % b);
+}
+
+long long nlcm(vector<int> num)
+{
+	long long answer = 0;
+	ll temp = num[0] * num[1] / getGcd(num[0], num[1]);
+
+	for (int i = 2; i < num.size(); i++)
+		temp = temp * num[i] / getGcd(temp, num[i]);
+	
+	return temp;
+}
+
+int main()
+{
+	vector<int> test{ 2,6,8,14 };
+
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+	cout << nlcm(test);
+}
+*/
+
+//pg144 시저 암호
+/*
+#include<iostream>
+#include<string>
+using namespace std;
+
+string caesar(string s, int n)
+{
+	string answer = "";
+	
+	int temp, temp2;
+	char temp3;
+	
+
+	for (int i = 0; i < s.length(); i++)
+	{
+		temp = int(s.at(i));
+		
+		if (temp != ' ')
+		{
+			temp2 = temp + n;
+			
+			if (65 <= temp && temp <= 90)
+			{
+				if (temp2 > 90)
+				{
+					temp2 -= 90;
+					temp2 %= 26;
+					if (temp2 == 0)
+						temp2 = 90;
+					else
+						temp2 += 64;
+				}
+			}
+			else
+			{
+				if (temp2 > 122)
+				{
+					temp2 -= 122;
+					temp2 %= 26;
+					if (temp2 == 0)
+						temp2 = 122;
+					else
+						temp2 += 96;
+				}
+			}
+
+			temp3 = temp2;
+			s.at(i) = temp3;
+		}
+	}
+	answer = s;
+
+	return answer;
+}
+
+int main()
+{
+	string text = "a B z";
+	int testNo = 4;
+
+	string testAnswer = caesar(text, testNo);
+
+	cout << testAnswer;
+}
+
+*/
+
+//pg145 야근 지수
+/*
+#include<iostream>
+#include<vector>
+#include <algorithm>
+#include <functional>
+using namespace std;
+
+int noOvertime(int no, vector<int> works)
+{
+	int answer = 0;
+
+	while (no != 0)
+	{
+		sort(works.begin(), works.end(), greater<int>());
+		works[0]--;
+		no--;
+	}
+
+	for (int i = 0; i < works.size(); i++)
+		answer += works[i] * works[i];
+
+	return answer;
+}
+
+int main()
+{
+	vector<int> works{ 4,3,3 };
+	int testNo = 4;
+
+	int testAnswer = noOvertime(testNo, works);
+
+	cout << testAnswer;
+}
+*/
+
+//pg155 최고의 집합
+/*
+#include<vector>
+#include<iostream>
+using namespace std;
+
+vector<int> bestSet(int no, int sum)
+{
+	vector<int> answer;
+
+	if (no == 0 || no > sum)
+	{
+		answer.push_back(-1);
+		return answer;
+	}
+
+	int mok = sum / no;
+	int nam = sum % no;
+	int num = no;
+
+	for (int i = 0; i < no - nam; i++)
+		answer.push_back(mok);
+
+	for (int i = 0; i < nam; i++)
+		answer.push_back(mok + 1);
+
+	return answer;
+}
+
+
+int main()
+{
+	int n = 3, s = 13;
+	vector<int> test = bestSet(n, s);
+
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+	for (int i = 0; i<test.size(); i++)
+		cout << test[i] << " ";
+}
+*/
+
+//-->Date 0923
+//NHN preTest1차
+/*
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int inNum;
+	int cache[3];
+	int head = 0;
+	int tail = 0;
+	int coFlag = 0;
+	while (cin >> inNum)
+	{
+		int dump = 0;
+
+		if (head < 3)
+		{
+			cache[head++] = inNum;
+		}
+		else
+		{
+			int tem = 3;
+			int flag = 0;
+
+			for (int i = 0; i < 3; i++)
+				if (cache[i] == inNum)
+				{
+					flag = 1;
+					break;
+				}
+					
+
+			if (flag == 1)
+			{
+				while (tem--)
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						if (cache[i] == inNum)
+						{
+							for (int j = i; j < 2; j++)
+								cache[j] = cache[j + 1];
+							cache[2] = inNum;
+						}
+					}
+				}
+			}
+			else
+			{
+				dump = cache[0];
+				for (int j = 0; j < 2; j++)
+					cache[j] = cache[j + 1];
+				cache[2] = inNum;
+			}
+
+			if (dump != 0)
+			{
+				coFlag = 1;
+				cout << dump << "\n";
+			}
+		}
+	}
+
+	if (coFlag == 0)
+		cout << 0 << "\n";
+}
+*/
+
+/*
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+	string inStr[4];
+	string answer;
+	for (int i = 0; i < 4; i++)
+		cin >> inStr[i];
+	
+	int tempI;
+	char tempC;
+	if (!inStr[0].compare("encrypt"))
+	{
+		for (int i = 0; i < inStr[1].size(); i++)
+		{
+			tempI = int(inStr[1].at(i)) - 97 + stoi(inStr[2]) * (int(inStr[3].at(i)) - 97);
+
+			if (tempI < 0 || tempI >25)
+			{
+				tempI %= 25;
+				if (tempI < 0)
+					tempI += 25;
+			}
+
+			tempC = tempI;
+			answer += tempC;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < inStr[1].size(); i++)
+		{
+			tempI = int(inStr[1].at(i)) - 97 - (stoi(inStr[2]) * (int(inStr[3].at(i)) - 97));
+
+			if (tempI < 0 || tempI >25)
+			{
+				tempI %= 25;
+				if (tempI < 0)
+					tempI += 25;
+			}
+
+			tempC = (tempI + 97);
+			answer += tempC;
+		}
+	}
+
+	cout << answer << "\n";
+}*/
+/*
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int N;
+	char tile[12][12] = { 0 };
+	int iTile[12][12];
+	for (int i = 0; i < 12; i++)
+		for (int j = 0; j < 12; j++)
+			iTile[i][j] = -1;
+
+	cin >> N;
+	for (int i = 1; i <= N; i++)
+		for (int j = 1; j <= N; j++)
+			cin >> tile[i][j];
+
+	for (int i = 1; i <= N; i++)
+		for (int j = 1; j <= N; j++)
+		{
+			if (tile[i - 1][j] == '0' && tile[i + 1][j] == '0' &&
+				tile[i][j - 1] == '0' && tile[i][j + 1] == '0')
+				iTile[i][j] = 0;
+			else if (tile[i - 1][j] == '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 1;
+			else if (tile[i - 1][j] == '0' && tile[i + 1][j] == '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] == '0')
+				iTile[i][j] = 2;
+			else if (tile[i - 1][j] != '0' && tile[i + 1][j] == '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] == '0')
+				iTile[i][j] = 3;
+			else if (tile[i - 1][j] == '0' && tile[i + 1][j] == '0' &&
+				tile[i][j - 1] == '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 4;
+			else if (tile[i - 1][j] != '0' && tile[i + 1][j] == '0' &&
+				tile[i][j - 1] == '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 5;
+			else if (tile[i - 1][j] == '0' && tile[i + 1][j] == '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 6;
+			else if (tile[i - 1][j] != '0' && tile[i + 1][j] == '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 7;//8
+			else if (tile[i - 1][j] == '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] == '0' && tile[i][j + 1] == '0')
+				iTile[i][j] = 8;
+			else if (tile[i - 1][j] != '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] == '0' && tile[i][j + 1] == '0')
+				iTile[i][j] = 9;
+			else if (tile[i - 1][j] == '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] == '0')
+				iTile[i][j] = 10;
+			else if (tile[i - 1][j] != '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] == '0')
+				iTile[i][j] = 11;
+			else if (tile[i - 1][j] == '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] == '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 12;
+			else if (tile[i - 1][j] != '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] == '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 13;
+			else if (tile[i - 1][j] == '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 14;
+			else if (tile[i - 1][j] != '0' && tile[i + 1][j] != '0' &&
+				tile[i][j - 1] != '0' && tile[i][j + 1] != '0')
+				iTile[i][j] = 15;
+		}
+
+	int digFlag = 1;
+	for (int i = 1; i <= N; i++)
+		for (int j = 1; j <= N; j++)
+		{
+			if (tile[i][j] == 'B')
+				iTile[i][j] += 16;
+			else if (tile[i][j] == 'C')
+				iTile[i][j] += 32;
+			else if (tile[i][j] == 'D')
+				iTile[i][j] += 48;
+			else if (tile[i][j] == 'E')
+				iTile[i][j] += 64;
+			else if (tile[i][j] == 'F')
+				iTile[i][j] += 80;
+			else if (tile[i][j] == 'G')
+				iTile[i][j] += 96;
+
+			if (iTile[i][j] > 10 || iTile[i][j] == -1)
+				digFlag = 2;
+			else if (iTile[i][j] > 100)
+				digFlag = 3;
+		}
+
+	for (int i = 1; i <= N; i++)
+		for (int j = 1; j <= N; j++)
+		{
+			if (digFlag == 2 && iTile[i][j] != -1)
+			{
+				if (iTile[i][j] < 10)
+					cout << " ";
+			}
+
+			if (digFlag == 3)
+			{
+				if (iTile[i][j] == -1 || (10 <= iTile[i][j] && iTile[i][j] < 100) )
+					cout << " ";
+				else if (iTile[i][j] < 10)
+					cout << "  ";
+			}
+				
+			cout << iTile[i][j];
+			if (j != N)
+				cout << " ";
+			else
+				cout << "\n";
+		}
+}
+*/
+
+/*
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include<functional>
+using namespace std;
+
+int arr[12][12] = { 0 };
+int vis[12][12] = { 0 };
+
+bool isGo(int r, int c)
+{
+	if (arr[r][c] == 1 && vis[r][c] == 0)
+		return true;
+	else
+		return false;
+}
+
+int solve(int r, int c)
+{
+	if (vis[r][c] == 1 || arr[r][c] == 0)
+		return 0;
+
+	vis[r][c] = 1;
+	int tr = 1;
+
+	if (isGo(r - 1, c))
+		tr += solve(r - 1, c);
+	if (isGo(r, c - 1))
+		tr += solve(r, c - 1);
+	if (isGo(r + 1, c))
+		tr += solve(r + 1, c);
+	if (isGo(r, c + 1))
+		tr += solve(r, c + 1);
+
+	return tr;
+}
+
+int main()
+{
+	vector<int> rst;
+	int n;
+
+	cin >> n;
+
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+
+	int tmp = -1;
+	int rstF = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			tmp = solve(i, j);
+			if (tmp != 0) {
+				rstF++;
+				rst.push_back(tmp);
+			}
+		}
+	}
+
+	sort(rst.begin(), rst.end(), greater<int>());
+
+	cout << rstF << "\n";
+	for (int i = 0; i < rst.size(); i++)
+		cout << rst[i] << " ";
+
+	return 0;
+}
+*/
+
+//-->Date 0925
+
+//pg 187 가장 큰 정사각형 찾기
+//실패
+/*
+#include<iostream>
+#include<vector>
+#include<utility>
+using namespace std;
+
+int findLargestSquare(vector<vector<char>> board)
+{
+	int answer = 0;
+
+	int max = 1;
+	int rSize = board.size();
+	int cnt;
+	for (int i = 0; i < rSize - 1; i++)
+	{
+		int bSize = board[i].size();
+		for (int j = 0; j < bSize - 1; j++)
+		{
+			if (board[i][j] == 'O')
+			{
+				//cout << "start At : " << i << ", " << j << "\n";
+				cnt = 0;
+				for (int k = j; k < bSize; k++)
+				{
+					if (board[i][k] == 'O')
+						cnt++;
+					else
+						break;
+				}
+
+				if (cnt <= max || (i + cnt > rSize))
+					continue;
+
+				bool nFlag = false;
+
+				for (int k = i + 1; k < i + cnt; k++)
+				{
+					for (int k2 = j; k2 < j + cnt; k2++)
+					{
+						if (board[k][k2] == 'X')
+						{
+							nFlag = true;
+							break;
+						}
+					}
+
+					if (nFlag)
+						break;
+				}
+
+				if (!nFlag)
+				{
+					//cout << "maxG : " << i << ", " << j << "\n";
+					max = cnt;
+				}
+					
+			}
+		}
+	}
+
+	answer = max * max;
+
+	return answer;
+}
+int main()
+{
+
+	vector<vector<char>> board{
+		{ 'X','O','O','O','X' },
+		{ 'X','O','O','O','O' },
+		{ 'X','X','O','O','O' },
+		{ 'X','X','O','O','O' },
+		{ 'X','X','X','X','X' } };
+
+	//아래는 테스트 출력을 위한 코드입니다.
+	cout << findLargestSquare(board);
+}
+*/
+
+//다른사람이 푼 방법 dp이용
+/*
+#include<iostream>
+#include<vector>
+#include<utility>
+#include<algorithm>
+using namespace std;
+
+int findLargestSquare(vector<vector<char>> board)
+{
+	int answer = 0;
+	vector<vector<int>> nBoard(board.size(), vector<int>(board[0].size(), 0));
+
+	for (int i = 0; i < board.size(); i++)
+		for (int j = 0; j < board[0].size(); j++)
+		{
+			if (board[i][j] == 'O')
+				nBoard[i][j] = 1;
+			else
+				nBoard[i][j] = 0;
+		}
+
+	int maxV = 1;
+	for (int i = 1; i < board.size(); i++)
+		for (int j = 1; j < board[0].size(); j++)
+			if (nBoard[i][j] > 0)
+			{
+				nBoard[i][j] = 1 + (min(min(nBoard[i - 1][j], nBoard[i][j - 1]), nBoard[i - 1][j - 1]));
+				maxV = max(maxV, nBoard[i][j]);
+			}
+
+	answer = maxV * maxV;
+	
+	return answer;
+}
+int main()
+{
+
+	vector<vector<char>> board{
+		{ 'X','O','O','O','X' },
+		{ 'X','O','O','O','O' },
+		{ 'X','X','O','O','O' },
+		{ 'X','X','O','O','O' },
+		{ 'X','X','X','X','X' } };
+
+	//아래는 테스트 출력을 위한 코드입니다.
+	cout << findLargestSquare(board);
+}
+*/
+
+
+//pg154 땅따먹기 게임
+
+/*
+#include<iostream>
+#include<vector>
+#include <algorithm>
+using namespace std;
+
+int biggg(int dp[][4], int n, int nn)
+{
+	int maxV = -1;
+	for (int i = 0; i <= 3; i++)
+		if (i != nn)
+			maxV = max(dp[n][i], maxV);
+	
+	return maxV;
+}
+
+int hopscotch(vector<vector<int> > board)
+{
+	// 함수를 완성하세요.
+	int answer = 0;
+	int dp[5000][4] = { 0 };
+	
+	for (int i = 0; i < board.size(); i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (i == 0)
+				dp[i][j] = board[i][j];
+			else
+				dp[i][j] = board[i][j] + biggg(dp, i - 1, j);
+
+			//cout << "dp[" << i << "][" << j << "] : "<< dp[i][j] << "\n";
+		}
+	}
+
+	answer = biggg(dp, board.size() - 1, 5);
+	return answer;
+}
+
+int main()
+{
+	vector<vector<int> > test{ { 1,2,3,5 },{ 5,6,7,8 },{ 4,3,2,1 } };
+	//아래는 테스트로 출력해 보기 위한 코드입니다.
+	cout << hopscotch(test);
+}
+*/
+
+
+
+//pg 183 공항 건설하기
+//실패
+/*
+#include<iostream>
+#include<vector>
+#include<utility>
+#include<algorithm>
+using namespace std;
+typedef unsigned long long ll;
+
+int chooseCity(int n, vector<pair<int, int>> city)
+{
+	int answer = 0;
+	ll *rst = new ll[n];
+	for (int i = 0; i < n; i++)
+		rst[i] = 0;
+
+	sort(city.begin(), city.end());
+	
+	ll minV = 184467440737095516;
+	for (int i = 0; i < n; i++)
+	{
+		bool sFlag = false;
+		for (int j = 0; j < n; j++)
+		{
+			rst[i] += abs(city[i].first - city[j].first) * city[j].second;
+			cout << "rst[" << i << "] : " << rst[i] << "\n";
+			if (rst[i] > minV)
+			{
+				sFlag = true;
+				break;
+			}
+		}
+
+		if (!sFlag)
+		{
+			minV = rst[i];
+			cout << "minV : " << minV << "\n";
+		}
+			
+	}
+
+//	ll temp = *min_element(rst, rst + cSize);
+	ll temp = minV;
+
+	//cout << temp << "\n";
+
+	for (int i = 0; i < n; i++)
+	{
+		if (rst[i] == temp)
+		{
+			answer = city[i].first;
+			break;
+		}
+	}
+
+	return answer;
+}
+int main()
+{
+
+	int tn = 3;
+	pair<int, int> a, b, c;
+	a.first = -759220691, a.second = 474762397;
+	b.first = 96848089, b.second = 8629841;
+	c.first = -595876812, c.second = 6939762;
+	vector<pair<int, int>> tcity{ a,b,c };
+
+	//아래는 테스트 출력을 위한 코드입니다.
+	cout << chooseCity(tn, tcity);
+}
+*/
+
+//다른사람이 풂. 이해어려움
+/*
+#include<iostream>
+#include<vector>
+#include<utility>
+#include<algorithm>
+using namespace std;
+typedef unsigned long long ull;
+
+int chooseCity(int n, vector<pair<int, int>> city)
+{
+	int answer = 0;
+	ull total = 0, start = 0;
+
+	sort(city.begin(), city.end());
+	
+	for (int i = 0; i < n; i++)
+		total += city[i].second;
+
+	for (int i = 0; i < n; i++)
+	{
+		start += city[i].second;
+		if (start >= (total + 1) / 2)
+		{
+			//cout << "i : " << i << "\n";
+			answer = city[i].first;
+			break;
+		}
+	}
+
+	return answer;
+}
+int main()
+{
+
+	int tn = 3;
+	pair<int, int> a, b, c;
+	a.first = 1, a.second = 5;
+	b.first = 2, b.second = 2;
+	c.first = 3, c.second = 3;
+	vector<pair<int, int>> tcity{ a,b,c };
+
+	//아래는 테스트 출력을 위한 코드입니다.
+	cout << chooseCity(tn, tcity);
+}
+*/
+
+//pg156 숫자의 표현
+/*
+#include<iostream>
+using namespace std;
+int expressions(int testCase)
+{
+	int answer = 0;
+
+	int temp;
+	int cnt = 0;
+	for (int i = 1; i <= testCase; i++)
+	{
+		temp = 0;
+		for (int j = i; j <= testCase; j++)
+		{
+			temp += j;
+			
+			if (temp < testCase)
+			{
+				continue;
+			}
+			else if (temp == testCase)
+			{
+				cnt++;
+				break;
+			
+			}
+			else if (temp > testCase)
+			{
+				break;
+			}
+		}
+	}
+
+	answer = cnt;
+	return answer;
+}
+
+int main()
+{
+	int testNo = 15;
+	int testAnswer = expressions(testNo);
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+	cout << testAnswer;
+}
+*/
+
