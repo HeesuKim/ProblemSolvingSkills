@@ -5468,3 +5468,980 @@ int main()
 }
 */
 
+//-->Date0927
+//pg160 2xn 타일링
+
+/*큰수구하기가 너무 복잡.
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int factorial(int n)
+{
+	if (n == 0)
+		return 1;
+	else
+		return factorial(n - 1) * n;
+}
+
+int tiling(int n)
+{
+	int answer = 0;
+
+	int a = n / 2;
+	int b = n - (a * 2);
+
+	while (a != 0)
+	{
+		answer += (factorial(a + b)) / (factorial(a) * factorial(b));
+		a -= 1;
+		b += 2;
+	}
+
+	return answer % 100000;
+}
+int main()
+{
+	int testn = 5;
+	int testAnswer = tiling(testn);
+
+	cout << testAnswer;
+}
+*/
+
+//간단한 점화식으로 다른 사람이 풂
+/*
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int tiling(int n)
+{
+	int answer = 0;
+	int *dp = new int[n];
+
+	dp[0] = dp[1] = 1;
+
+	for (int i = 2; i <= n; i++)
+		dp[i] = (dp[i - 1] + dp[i - 2]) % 100000;
+
+	answer = dp[n];
+
+	return answer;
+}
+int main()
+{
+	int testn = 5;
+	int testAnswer = tiling(testn);
+
+	cout << testAnswer;
+}
+*/
+
+//pg164 3xn 타일링
+//분석실패
+//다른사람 코드
+/*
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int tiling(int n)
+{
+	int answer = 0;
+	int dp[3000][8] = { 0 };
+	dp[0][7] = 1;
+
+	for (int i = 1; i <= n; i++)
+	{
+		dp[i][0] = dp[i - 1][7] % 100000;
+		dp[i][1] = dp[i - 1][6] % 100000;
+		dp[i][2] = dp[i - 1][5] % 100000;
+		dp[i][3] = (dp[i - 1][4] + dp[i - 1][7]) % 100000;
+		dp[i][4] = dp[i - 1][3] % 100000;
+		dp[i][5] = dp[i - 1][2] % 100000;
+		dp[i][6] = (dp[i - 1][1] + dp[i - 1][7]) % 100000;
+		dp[i][7] = (dp[i - 1][0] + dp[i - 1][3] + dp[i - 1][6]) % 100000;
+	}
+
+	answer = dp[n][7];
+
+	return answer;
+}
+int main()
+{
+	int test = 2;
+
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+	cout << tiling(test);
+}
+*/
+
+
+//-->Date0929
+
+//pg159 줄 서는 방법
+/*
+#include<iostream>
+#include<vector>
+using namespace std;
+
+typedef long long ll;
+int mFac[50] = { 0 };
+vector<int> preVec;
+
+ll fac(int n)
+{
+	if (mFac[n] != 0)
+		return mFac[n];
+
+	if (n == 0)
+		return 1;
+	else
+		return mFac[n] = fac(n - 1) * n;
+}
+
+int findRm(int a)
+{
+	int b = preVec[a - 1];
+
+	for (int i = a - 1; i < preVec.size() - 1; i++)
+		preVec[i] = preVec[i + 1];
+
+	preVec.pop_back();
+
+	return b;
+}
+
+void solve(ll cnt, int digit, vector<int> &ans)
+{
+	int a;
+	int b = cnt;
+	int iCnt;
+	bool endFlag = false;
+
+	while (digit != 0)
+	{
+		a = fac(digit - 1);
+		iCnt = 1;
+
+		while (1)
+		{
+			if (a < cnt)
+			{
+				cnt -= a;
+				iCnt++;
+			}
+			else
+			{
+				cout << "ICNT : " << iCnt << "\n";
+				int temp = findRm(iCnt);
+				cout << "push1 : " << temp << "\n";
+				ans.push_back(temp);
+				if (a == cnt)
+				{
+					for (int i = 0; i < preVec.size(); i++)
+					{
+						ans.push_back(preVec[preVec.size() - 1 - i]);
+						cout << "push2 : " << preVec[preVec.size() - 1 - i] << "\n";
+						
+					}
+					endFlag = true;
+					break;
+				}
+
+				digit--;
+				break;
+			}
+		}
+
+		if (endFlag == true)
+			break;
+	}
+}
+
+vector<int> setAlign(int n, long long cnt)
+{
+	vector<int> answer;
+	for (int i = 1; i <= n; i++)
+		preVec.push_back(i);
+
+	solve(cnt, n, answer);
+
+	return answer;
+}
+int main()
+{
+	int testn = 3;
+	long long testcnt = 6;
+	vector<int> testAnswer = setAlign(testn, testcnt);
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+
+	for (int i = 0; i< testAnswer.size(); i++)
+	{
+		cout << testAnswer[i] << " ";
+	}
+}
+*/
+
+
+//pg 158 124나라의 숫자
+/*
+#include<iostream>
+#include<vector>
+#include<string>
+using namespace std;
+
+string change124(int no)
+{
+	string answer = "";
+
+	int mod[3] = { 4, 1, 2 };
+
+	int a = no;
+	int b;
+	int c;
+
+	while (1)
+	{
+		c = a;
+		a = c / 3;
+		b = c % 3;
+
+		if (a < 3)
+		{
+			if (b != 0)
+			{
+				answer.insert(0, to_string(mod[b]));
+				answer.insert(0, to_string(mod[a]));
+			}
+			else
+			{
+				answer.insert(0, to_string(mod[b]));
+				if (a == 2)
+					answer.insert(0, to_string(1));
+			}
+			break;
+		}
+		else
+		{
+			if (b == 0)
+				a--;
+			answer.insert(0, to_string(mod[b]));
+		}
+	}
+
+	return answer;
+}
+
+int main()
+{
+	int testNo = 17;
+	string testAnswer = change124(testNo);
+
+	cout << testAnswer;
+}
+*/
+
+//-->Date 0930
+
+//MIDASIT 코딩테스트
+/*
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int n, m, k;
+	int inRow, inStart, inEnd;
+	int arr[11][11] = { 0 };
+
+	cin >> n >> m >> k;
+
+	for (int i = 1; i <= k; i++)
+	{
+		cin >> inRow >> inStart >> inEnd;
+
+		for (int j = inStart; j <= inEnd; j++)
+		{
+			arr[inRow][j] = 1;
+		}
+	}
+
+	int cnt = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= m; j++)
+		{
+			if (arr[i][j] == 0)
+				cnt++;
+		}
+	}
+
+	cout << cnt << "\n";
+
+	return 0;
+}
+*/
+
+/*
+#include <iostream>
+#include <string>
+#include <stdlib.h>
+using namespace std;
+
+int compStr(char a, char b)
+{
+	int iA = a;
+	int iB = b;
+
+	//cout << "iA, iB : " << iA << ", " << iB << "\n";
+
+	if (iA != iB)
+		return abs(iA - iB);
+	else
+		return 0;
+}
+
+int main()
+{
+	int t;
+	string inStr;
+
+	cin >> t;
+
+	int cnt;
+	for (int i = 0; i < t; i++)
+	{
+		cin >> inStr;
+
+		//cout << "inStr : " << inStr << "\n";
+
+		int stSize = inStr.size() / 2;
+		int endPos = inStr.size() - 1;
+
+		//cout << "stSize : " << stSize << "\n";
+		cnt = 0;
+		for (int i = 0; i < stSize; i++)
+			cnt += compStr(inStr.at(i), inStr.at(endPos - i));
+
+		cout << cnt << "\n";
+	}
+
+	return 0;
+}
+*/
+
+
+/*
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int N;
+	int arr[10002] = { 0 };
+	int arrB[10002] = { 0 };
+
+	int dp[10002] = { 0 };
+
+	cin >> N;
+
+	int inNum;
+	for (int i = 1; i <= N; i++)
+	{
+		cin >> inNum;
+		arr[inNum]++;
+	}
+
+	dp[0] = arr[0];
+	dp[1] = arr[1];
+	dp[2] = arr[2];
+ 
+	for (int i = 4; i <= 10000; i++)
+	{
+		dp[i] = dp[i - 4] + arr[i - 1] + arr[i - 2] + arr[i - 3] + arr[i];
+	}
+
+
+
+	int cnt;
+	int max = -1;
+	for (int i = 0; i <= 10000; i++)
+	{
+		cnt = 0;
+		if (arr[i] != 0)
+		{
+			for (int j = i; j <= i + 4; j++)
+			{
+				if (arrB[j] == 0)
+				{
+					cnt += arr[j];
+					arrB[j] = 1;
+				}
+				
+			}
+		}
+	}
+
+	cout << N - tMax + 1 << "\n";
+
+	return 0;
+}
+*/
+
+
+//5번
+/*
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+struct graph {
+	int from;
+	int to;
+	int val;
+}typedef graph;
+
+int parent[1003];
+int rst;
+
+bool comp(graph a, graph b)
+{
+	return a.val < b.val;
+}
+
+int fin(int a)
+{
+	if (a == parent[a])
+		return a;
+
+	return parent[a] = fin(parent[a]);
+}
+
+bool notSame;
+void uni(int a, int b)
+{
+	notSame = false;
+	a = fin(a);
+	b = fin(b);
+
+	if (a == b) return;
+
+	parent[a] = b;
+	notSame = true;
+}
+
+vector<graph> edge;
+
+int main()
+{
+	int n, m;
+	cin >> n >> m;
+
+	for (int i = 1; i <= n; i++)
+		parent[i] = i;
+
+	for (int i = 0; i < m; i++)
+	{
+		graph temp;
+		cin >> temp.from >> temp.to >> temp.val;
+		edge.push_back(temp);
+	}
+
+	sort(edge.begin(), edge.end(), comp);
+
+	int sum = 0;
+	for (int i = 0; i < m; i++)
+	{
+		uni(edge[i].from, edge[i].to);
+
+		if (notSame)
+		{
+			rst += edge[i].val;
+			sum++;
+		}
+	}
+
+	if (sum + 1 != n)
+		rst = -1;
+	
+	cout << rst << "\n";
+
+	return 0;
+}
+*/
+
+
+//6번
+/*
+#include <iostream>
+using namespace std;
+
+int arr[302] = { 0 };
+int dp[302] = { 0 };
+
+int main()
+{
+	
+	int n;
+	cin >> n;
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> arr[i];
+	}
+
+	int max = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		max = arr[i];
+		int k = 1;
+		for (int j = i - 1; j >= 1; j--)
+		{
+			if (dp[j] + arr[k] > max)
+				max = dp[j] + arr[k];
+			k++;
+		}
+		dp[i] = max;
+	}
+
+	cout << dp[n] << "\n";
+
+	return 0;
+}
+*/
+
+
+//-->Date 1001
+//pg157 하노이의 탑
+
+/*
+#include<iostream>
+#include<vector>
+using namespace std;
+
+void inHanoi(int no, int from, int by, int to, vector<vector<int> > &arr)
+{
+	if (no == 1)
+		arr.push_back({ from, to });
+	else
+	{
+		inHanoi(no - 1, from, to, by, arr);
+		arr.push_back({ from, to });
+		inHanoi(no - 1, by, from, to, arr);
+	}
+}
+
+
+vector<vector<int> > hanoi(int no)
+{
+	vector<vector<int> > answer;
+
+	inHanoi(no, 1, 2, 3, answer);
+
+	return answer;
+}
+int main()
+{
+	int testNo = 2;
+
+	vector<vector<int> > testAnswer = hanoi(testNo);
+
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+	for (int i = 0; i< testAnswer.size(); i++)
+	{
+		for (int j = 0; j<testAnswer[i].size(); j++)
+		{
+			cout << testAnswer[i][j] << " ";
+		}
+		cout << "\n";
+	}
+}
+*/
+
+//pg162 과자 많이 먹기
+
+//잘못풂
+/*
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+struct cookSt
+{
+	int tVal;
+	int tPos;
+};
+
+bool comp(cookSt a, cookSt b)
+{
+	return a.tVal < b.tVal;
+}
+
+int eatCookie(vector<int> cookies)
+{
+	int answer = 0;
+	int cSize = cookies.size();
+	vector<cookSt> posOfCoo;
+
+	for (int i = 0; i < cSize; i++)
+	{
+		cookSt temp;
+		temp.tPos = i;
+		temp.tVal = cookies[i];
+		posOfCoo.push_back(temp);
+	}
+
+	sort(posOfCoo.begin(), posOfCoo.end(), comp);
+
+	for (int i = 0; i < cSize; i++)
+	{
+		cout << posOfCoo[i].tVal << " ";
+	}
+	cout << "\n";
+
+	int max = -1;
+	for (int i = 0; i < cSize; i++)
+	{
+		int cnt = 1;
+		int fixVal = posOfCoo[i].tVal;
+		int fixPos = posOfCoo[i].tPos;
+
+		cout << "fixVal : " << fixVal << ", fixPos : " << fixPos << "\n";
+
+		for (int j = i + 1; j < cSize; j++)
+		{
+			if (posOfCoo[j].tVal > fixVal && posOfCoo[j].tPos > fixPos)
+			{
+				//cout << "tVal : " << posOfCoo[j].tVal << ", tPos : " << posOfCoo[j].tPos << "\n";
+				cnt++;
+				fixVal = posOfCoo[j].tVal;
+				fixPos = posOfCoo[j].tPos;
+			}
+				
+		}
+		cout << "cnt : " << cnt << "\n";
+		if (cnt > max)
+			max = cnt;
+	}
+
+	answer = max;
+
+	return answer;
+}
+int main()
+{
+	vector<int > test{ 1,4,2,6,3,4,1,5 };
+
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+	cout << eatCookie(test);
+
+}
+*/
+
+//가장긴증가수열 만들기 방법을 이용
+/*
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int eatCookie(vector<int> cookies)
+{
+	vector<int> lis(cookies.size() + 1, 993282);
+
+	for (int i = 0; i < cookies.size(); i++)
+	{
+		auto it = lower_bound(lis.begin(), lis.end(), cookies[i]) - lis.begin();
+		//cout << it << "\n";
+		lis[it] = cookies[i];
+	}
+
+	int cnt = 0;
+	for (int i = 0; i < cookies.size(); i++)
+		if (lis[i] != 993282)
+			cnt++;
+
+	return cnt;
+}
+int main()
+{
+	vector<int > test{ 1,4,2,6,3,4,1,5 };
+
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+	cout << eatCookie(test);
+
+}
+*/
+
+//midasit
+//1번
+/*
+#include<iostream>
+using namespace std;
+
+int main()
+{
+	int n, m;
+	int ddeok[1001] = { 0 };
+	cin >> n >> m;
+	int sum = 0;
+	for (int i = 1; i <= m; i++)
+	{
+		cin >> ddeok[i];
+		sum += ddeok[i];
+	}
+	int maxD = sum / n;
+
+	
+	int temp;
+	while (1)
+	{
+		int dSum = 0;
+		for (int i = 1; i <= m; i++)
+		{
+			temp = ddeok[i] / maxD;
+			dSum += temp;
+		}
+		if (dSum != n)
+			maxD--;
+		else
+			break;
+	}
+
+	cout << maxD;
+
+	return 0;
+}
+*/
+
+
+//2번
+
+/*
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int main()
+{
+	int n;
+	int inArr[1002];
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		cin >> inArr[i];
+
+	if (next_permutation(inArr, inArr + n))
+	{
+		for (int i = 0; i < n; i++)
+			cout << inArr[i] << " ";
+	}
+	else
+		cout << "-1";
+
+	return 0;
+}
+*/
+
+
+
+//3번
+/*
+#include<iostream>
+using namespace std;
+
+int arr[102] = { 0 };
+
+bool flag = true;
+
+void solve(int subSet[], int size)
+{
+	cout << "solve\n";
+	if (subSet[0] == -1)
+		flag = false;
+
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = i + 1; j < size; j++)
+		{
+			if (subSet[i] == subSet[j])
+				flag = false;
+			if (subSet[i] > subSet[j] && subSet[i] % subSet[j] == 0)
+				flag = false;
+			if (subSet[i] < subSet[j] && subSet[j] % subSet[i] == 0)
+				flag = false;
+		}
+	}
+}
+
+void mkSub(int* subSet, int len, int idx, int n)
+{
+	cout << len << " " << idx << "\n";
+	if (idx == n)
+	{
+		solve(subSet, len);
+	}
+	else
+	{
+		idx++;
+		mkSub(subSet, len, idx, n);
+		idx--;
+		subSet[len++] = arr[idx++];
+		mkSub(subSet, len, idx, n);
+	}
+}
+
+int main()
+{
+	int t;
+	cin >> t;
+	for (int i = 0; i < t; i++)
+	{
+		int n;
+		cin >> n;
+		for (int j = 0; j < n; j++)
+			cin >> arr[i];
+
+		int* sub = new int[n];
+		for (int j = 0; j < n; j++)
+			sub[j] = -1;
+		flag = true;
+		mkSub(sub, 0, 0, n);
+		if (flag)
+			cout << "YES\n";
+		else
+			cout << "NO\n";
+	}
+
+	return 0;
+}
+*/
+
+//4번
+/*
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+
+struct xyArr
+{
+	int x;
+	int y;
+};
+
+int main()
+{
+	int n, m, x, y;
+	xyArr arr[102];
+	cin >> n >> m;
+
+	for (int i = 0; i < n; i++)
+	{
+		cin >> arr[i].x >> arr[i].y;
+	}
+
+	xyArr farmer;
+	farmer.x = 0;
+	farmer.y = 0;
+	int temp;
+	int sum = 0;
+	for (int i = 0; i < n; i++)
+	{
+		temp = abs(arr[i].x - farmer.x) + abs(arr[i].y - farmer.y);
+		if (m - temp >= 0)
+		{
+			sum += (m - temp);
+			m -= temp;
+			farmer.x = arr[i].x;
+			farmer.y = arr[i].y;
+		}
+		else
+			break;
+	}
+
+	cout << sum;
+
+	return 0;
+}
+
+*/
+
+//5번
+//배열파라미터는 주소를 넘기기 때문에 원본이 바뀜
+/*
+#include<iostream>
+using namespace std;
+
+int arr[11][27] = { 0 };
+int n, m;
+int min = 59;
+
+
+
+void solve(int idx, int cnt, int calSum, int alp[])
+{
+	int alp2[27];
+	for (int i = 0; i < 27; i++)
+		alp2[i] = alp[i];
+	//cout << "idx : " << idx << "\n";
+	if (cnt > min)
+		return;
+
+	if (idx == m)
+	{
+		cout << "cnt" << cnt << "\n";
+		cout << "calSum" << calSum << "\n";
+		if (calSum == n)
+		{
+			min = cnt;
+			cout << "min : " << min << "\n";
+		}
+			
+	}
+	else
+	{
+		//안포함
+		solve(idx + 1, cnt, calSum, alp2);
+
+		//포함
+		for (int i = 0; i < 26; i++)
+		{
+			if (arr[idx][i] == 1 && alp2[i] == 0)
+			{
+				cout << "arr[" << idx << "][" << i << "] : " << arr[idx][i] << "\n";
+				alp2[i] = 1;
+				cout << "alp[" << i << "] : " << alp[i] << "\n";
+				calSum++;
+			}
+		}
+		solve(idx + 1, cnt + 1, calSum, alp2);
+	}
+}
+
+int main()
+{
+	cin >> n >> m;
+	
+	for (int i = 1; i <= m; i++)
+	{
+		int inNum;
+		cin >> inNum;
+		char inCh;
+		for (int j = 0; j < inNum; j++)
+		{
+			cin >> inCh;
+			//cout << "inCH : " << ((int)inCh) - 65 << "\n";
+			arr[i][inCh - 65] = 1;
+		}
+	}
+	int alp[27] = { 0 };
+	solve(1, 0, 0, alp);
+	cout << min;
+
+	return 0;
+}
+
+*/
