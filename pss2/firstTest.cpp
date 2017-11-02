@@ -6445,3 +6445,776 @@ int main()
 }
 
 */
+
+
+
+
+//-->Date 1013
+
+//pg163 거스름돈
+//테스트케이스가 이상
+
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int change(int total, vector<int> coin)
+{
+	int answer = 0;
+	int size = coin.size();
+	int dp[5999] = { 0 };
+	dp[0] = 1;
+
+	cout << "total : " << total << "\n";
+	for (int i = 0; i < size; i++)
+		cout << coin[i] << " ";
+	cout << "\n";
+
+	for (int i = 0; i < size; i++)
+	{
+		int start = coin[i];
+		for (int j = start; j <= total; j++)
+		{
+			if ((j - start) >= 0)
+				dp[j] += dp[j - start];
+		}
+			
+	}
+
+	answer = dp[total];
+
+	return answer;
+}
+int main()
+{
+	int total = 1000;
+	vector<int > test{ 4, 4, 13, 22, 23, 24, 38, 39, 41, 45 };
+
+	// 아래는 테스트로 출력해 보기 위한 코드입니다.
+	cout << change(total, test);
+
+}
+*/
+
+
+//라인
+
+//1
+/*
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+
+int calc(vector<int> &numbers) {
+	double size = numbers.size();
+	double sum = 0;
+	double avg = 0;
+	for (int i = 0; i < size; i++)
+	{
+		sum += numbers[i];
+	}
+	avg = sum / size;
+	//cout << "avg : " << avg << "\n";
+	int cnt = 0;
+	while (avg < 9.5)
+	{
+		sum += 10;
+		cnt++;
+		avg = sum / (size + cnt);
+		cout << "avg : " << avg << "\n";
+	}
+
+	return cnt;
+}
+
+int main(int argc, const char* argv[]) {
+	int n = 0;
+	cin >> n;
+
+	vector<int> numbers;
+	for (int i = 0; i<n; i++) {
+		int score = 0;
+		cin >> score;
+		numbers.push_back(score);
+	}
+
+	cout << calc(numbers) << endl;
+}
+*/
+
+
+//2
+/*
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <stdlib.h>
+
+using namespace std;
+
+int calc(long long n) {
+	if (n == 1)
+		return 1;
+
+
+
+
+	return cnt;
+}
+
+int main(int argc, const char *argv[]) {
+	long long n = 0;
+	cin >> n;
+
+	cout << calc(n) << endl;
+}
+*/
+
+//3
+
+/*
+#include <iostream>
+#include <string>
+
+#define PEG_MAX_SIZE 3
+#define DISK_MAX_SIZE 20
+
+using namespace std;
+
+
+int find(int pegs_given[PEG_MAX_SIZE][DISK_MAX_SIZE]) {
+	
+	return 0;
+}
+
+int main(int argc, const char *argv[]) {
+	int pegs_given[PEG_MAX_SIZE][DISK_MAX_SIZE] = { 0, };
+
+	for (int i = 0; i < PEG_MAX_SIZE; i++) {
+		string line;
+		getline(cin, line);
+		if (line.length() == 0) {
+			continue;
+		}
+
+		int j = 0;
+		size_t last = 0;
+		size_t next = 0;
+		while ((next = line.find(' ', last)) != string::npos) {
+			int len = next - last;
+			if (len) {
+				pegs_given[i][j++] = stoi(line.substr(last, len));
+			}
+			last = next + 1;
+		}
+
+		string lastNumber = line.substr(last);
+		if (!lastNumber.empty()) {
+			pegs_given[i][j] = stoi(lastNumber);
+		}
+	}
+
+	cout << find(pegs_given) << endl;
+}
+*/
+
+//4
+
+/*
+#include <iostream>
+using namespace std;
+
+#define MAX_N 1000
+
+int graph[MAX_N][MAX_N];
+int N;
+
+bool solve() {
+	int inArr[MAX_N];
+	for (int i = 0; i < MAX_N; i++)
+		inArr[i] = -1;
+
+	int nSeat[MAX_N] = { 0 };
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			if (graph[i][j] == 1)
+			{
+				nSeat[i]++;
+				if (inArr[j] != -1)
+				{
+					nSeat[inArr[j]]--;
+					if (nSeat[inArr[j]] == 0)
+						return false;
+				}
+				inArr[j] = i;
+			}
+		}
+	}
+	
+	return true;
+}
+
+int main() {
+	int T, K, P, S;
+	cin >> T;
+
+	for (int t = 0; t < T; t++) {
+		cin >> N;
+
+		// reset
+		for (int person = 0; person < N; person++) {
+			for (int seat = 0; seat < N; seat++) {
+				graph[person][seat] = 0;
+			}
+		}
+
+		cin >> K;
+
+		for (int i = 0; i < K; i++) {
+			cin >> P;
+			cin >> S;
+			graph[P][S] = 1;
+		}
+
+		cout << (solve() ? 'O' : 'X') << '\n';
+	}
+	return 0;
+}
+
+*/
+
+
+//5번
+/*
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int calc(vector<int> &numbers) {
+	 
+	int size = numbers.size();
+	int start = numbers[0];
+	bool up = false, down = false;
+	for (int i = 1; i < size; i++)
+	{
+		if (numbers[i] > start && up)
+		{
+			continue;
+		}
+		else if (numbers[i] < start)
+		{
+			up = false;
+			down = true;
+		}
+
+
+
+		start = numbers[i];
+	}
+
+	return 0;
+}
+
+int main(int argc, const char* argv[]) {
+	int n = 0;
+	cin >> n;
+
+	vector<int> numbers;
+	for (int i = 0; i<n; i++) {
+		int book = 0;
+		cin >> book;
+		numbers.push_back(book);
+	}
+
+	cout << calc(numbers) << endl;
+}
+*/
+
+
+//소수생성함수
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> primeNum(int N)
+{
+	bool* isPrime = new bool[N];
+
+	for (int i = 0; i < N; i++)
+		isPrime[i] = true;
+
+	isPrime[1] = false;
+	for (int i = 2; i*i <= N; i++)
+	{
+		if (isPrime[i])
+		{
+			for (int j = i*i; j <= N; j += i)
+				isPrime[j] = false;
+		}
+	}
+
+	vector<int> ret;
+	for (int i = 2; i <= N; i++)
+	{
+		if (isPrime[i])
+			ret.push_back(i);
+	}
+
+	//delete[] isPrime;
+
+	return ret;
+}
+
+int main()
+{
+	int n = 100;
+	vector<int> primeVec = primeNum(n);
+	int size = primeVec.size();
+	for (int i = 0; i < size; i++)
+		cout << primeVec[i] << " ";
+	cout << "\n";
+}
+*/
+
+//bj14729
+//priority queue, 우선순위 큐, greater
+/*
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <queue>
+#include <functional>
+
+using namespace std;
+
+priority_queue<double, vector<double>, greater<double> > pq;
+
+int main()
+{
+	int n;
+	cin >> n;
+
+	for (int i = 0; i < n; i++)
+	{
+		double val;
+		cin >> val;
+
+		if (pq.size() >= 7)
+		{
+			if (pq.top() > val)
+			{
+				pq.pop();
+				pq.push(val);
+			}
+		}
+		else
+			pq.push(val);
+	}
+
+	cout << fixed;
+	cout.precision(3);
+	while (!pq.empty())
+	{
+		cout << pq.top() << "\n";
+		pq.pop();
+	}
+}
+*/
+
+//bj13565
+//dfs개념
+/*
+#include <iostream>
+
+using namespace std;
+
+int M, N;
+int graph[1002][1002];
+int visited[1002][1002] = { 0 };
+int nRow[4] = { -1, 0, 1, 0 };
+int nCol[4] = { 0, 1, 0, -1 };
+bool isPercol = false;
+
+void solve(int row, int col)
+{
+	visited[row][col] = 1;
+
+	if (row == M - 1)
+	{
+		isPercol = true;
+		return;
+	}
+	
+	for (int i = 0; i < 4; i++)
+	{
+		int nextRow = row + nRow[i];
+		int nextCol = col + nCol[i];
+
+		if ((0 <= nextRow && nextRow < M) && (0 <= nextCol && nextCol < N) && graph[nextRow][nextCol] == 0 && visited[nextRow][nextCol] == 0)
+			solve(nextRow, nextCol);
+	}
+}
+
+int main()
+{
+	cin >> M >> N;
+
+	for (int i = 0; i < M; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cin >> graph[i][j];
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		if (graph[0][i] == 0 && visited[0][i] == 0)
+			solve(0, i);
+	}
+	
+
+	if (isPercol)
+		cout << "YES\n";
+	else
+		cout << "NO\n";
+
+	return 0;
+}
+*/
+
+
+//넷마블
+
+//1
+/*
+#include <string>
+#include <iostream>
+using namespace std;
+
+bool solution(string a, string b)
+{
+	bool answer = true;
+
+	int arrA[26] = { 0 };
+	int arrB[26] = { 0 };
+
+	int leng = a.length();
+
+	for (int i = 0; i < leng; i++)
+	{
+		char cA = a.at(i);
+		char cB = b.at(i);
+		if (cA > 90)
+			cA -= 32;
+		if (cB > 90)
+			cB -= 32;
+
+		arrA[cA - 65]++;
+		arrB[cB - 65]++;
+	}
+
+	for (int i = 0; i < 26; i++)
+	{
+		if (arrA[i] != arrB[i])
+		{
+			answer = false;
+			break;
+		}
+	}
+
+	return answer;
+}
+*/
+
+//2
+/*
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+vector<string> preWords;
+
+bool exist(string word)
+{
+	int size = preWords.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		if (word.compare(preWords[i]) == 0)
+			return true;
+	}
+	preWords.push_back(word);
+	cout << "push : " << word << "\n";
+
+	return false;
+}
+
+vector<int> solution(int n, vector<string> words) {
+	vector<int> answer{ 0,0 };
+	int size = words.size();
+	int cnt;
+	bool bob = false;
+	char preCha = words[0].at(words[0].length() - 1);
+	preWords.push_back(words[0]);
+
+	for (int i = 1; i < size; i++)
+	{
+		cout << "exist3\n";
+		if (preCha != words[i].at(0))
+		{
+			cout << "exist2\n";
+			cnt = i;
+			bob = true;
+			break;
+		}
+
+		if (exist(words[i]))
+		{
+			cout << "exist1\n";
+			cnt = i;
+			bob = true;
+			break;
+		}
+		
+		preCha = words[i].at(words[i].length() - 1);
+	}
+
+	if (bob)
+	{
+		answer.pop_back();
+		answer.pop_back();
+
+		int man = (cnt + 1) % n;
+		int turn = ((cnt + 1) / n) + 1;
+
+		if (man == 0)
+		{
+			man = n;
+			turn--;
+		}
+
+		answer.push_back(man);
+		answer.push_back(turn);
+	}
+
+	return answer;
+}
+
+int main()
+{
+	vector<string> test{ "tank", "kick", "know", "wheel", "land", "dream", "mother", "robot", "tank" };
+	solution(3, test);
+}
+*/
+
+
+
+
+
+
+
+
+
+/*
+tmon
+주어진 csv파일이 ","로 구분되어있는데 중간에 제목에 ","가 들어있는 부분을 일괄적으로 처리할 수가 없어서 원본자료를 임의로 수정했습니다.
+
+
+
+
+
+
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <string.h>
+#include <math.h>
+using namespace std;
+
+struct fixData
+{
+	string name;
+	int tVal;
+	double oriVal;
+	double salVal;
+};
+
+void SelectionSort(fixData arr[]) {
+	int i, j, min;
+	fixData dumm;
+
+	for (i = 0; i < 50; i++) {
+		min = i;
+
+		for (j = i + 1; j < 50; j++) {
+			if (arr[j].tVal < arr[min].tVal)
+				min = j;
+		}
+
+		dumm = arr[min];
+		arr[min] = arr[i];
+		arr[i] = dumm;
+		
+	}
+}
+
+string chRank(string dName, fixData pre[], fixData nex[])
+{
+	int preNum = 0;
+	int nexNum = 0;
+	int retNum = -100;
+
+	for (int i = 0; i < 50; i++)
+	{
+		if (preNum == 0)
+			if (!dName.compare(pre[i].name))
+				preNum = 50 - i;
+
+		if (nexNum == 0)
+			if (!dName.compare(nex[i].name))
+				nexNum = 50 - i;
+	}
+
+	retNum = preNum - nexNum;
+
+	if (retNum == 0)
+		return "-";
+	else if (retNum > 0)
+		return "+" + to_string(retNum);
+	else
+		return to_string(retNum);
+
+}
+
+//string dotdot(int n)
+//{
+//	string temp = to_string(n);
+//	string ret = "";
+//	int len = temp.length();
+//
+//	while (len > 3)
+//	{
+//		ret = "," + temp.substr(len - 3, 3);
+//	}
+//
+//
+//}
+
+
+int main()
+{
+	string inner[100][5];
+	int rowNum = 0;
+	int cut;
+	ifstream oFile;
+	string line;
+	oFile.open("ttt.csv");
+
+	if (oFile.is_open())
+	{
+		while (getline(oFile, line))
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				cut = line.find_first_of(",");
+				inner[rowNum][i] = line.substr(0, cut);
+				line = line.substr(cut + 1);
+			}
+
+			rowNum++;
+		}
+		oFile.close();
+	}
+	else
+		cout << "file open error.\n";
+
+	fixData nine[100];
+	fixData tenn[100];
+	
+	for (int i = 0; i < 50; i++)
+	{
+		tenn[i].name = nine[i].name = inner[i][0];
+		tenn[i].oriVal = nine[i].oriVal = stoi(inner[i][2]);
+		tenn[i].salVal = nine[i].salVal = stoi(inner[i][1]);
+		nine[i].tVal = stoi(inner[i][2]) * stoi(inner[i][3]);
+		tenn[i].tVal = stoi(inner[i][2]) * stoi(inner[i][4]);
+	}
+
+	SelectionSort(nine);
+	SelectionSort(tenn);
+
+	
+	for (int i = 49; i >= 0; i--)
+	{
+		cout.width(4);
+		cout << 50 - i;
+		cout.width(4);
+		cout << chRank(tenn[i].name, nine, tenn) << "  ";
+		cout.width(40);
+		cout.setf(ios::left);
+		cout << tenn[i].name;
+		cout.unsetf(ios::left);
+		cout.width(10);
+		cout << tenn[i].oriVal << "원";
+		cout.width(10);
+		cout << tenn[i].salVal << "원";
+		cout.width(10);
+		cout << floor((tenn[i].oriVal - tenn[i].salVal) / tenn[i].oriVal * 100) << "%\n";
+	}
+
+	return 0;
+}
+
+*/
+
+
+//Date-->1102
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> solution(vector<int> &A, int K) {
+	int size = A.size();
+	int cnt = K;
+	
+	while (K-- > 0  && size != 0)
+	{
+		int zero = A[0];
+		A[0] = A[size - 1];
+		for (int i = size; i > 2; i--)
+			A[i - 1] = A[i - 2];
+		A[1] = zero;
+	}
+
+	return A;
+}
+
+int main()
+{
+	vector<int> test{};
+
+	solution(test, 3);
+	for (int i = 0; i < test.size(); i++)
+		cout << test[i] << " ";
+	cout << "\n";
+
+	return 0;
+}
