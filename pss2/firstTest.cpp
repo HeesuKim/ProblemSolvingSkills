@@ -7186,7 +7186,8 @@ int main()
 
 
 //Date-->1102
-
+//codility lesson2 CyclicRotation
+/*
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -7218,3 +7219,276 @@ int main()
 
 	return 0;
 }
+*/
+
+//codility lesson3 PermMissingElem
+/*
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int solution(vector<int> &A) {
+	sort(A.begin(), A.end());
+	int size = A.size();
+
+	for (int i = 0; i < size; i++)
+		if (A[i] != i + 1)
+			return i + 1;
+
+	return size + 1;
+}
+*/
+
+//-->Date 1112
+
+//codility lesson3 TapeEquilibrum
+/*
+#include <iostream>
+#include <vector>
+#include <stdlib.h>
+using namespace std;
+
+int solution(vector<int> &A) {
+	int stVal = 0, edVal = 0;
+	int size = A.size();
+	int min = 0;
+
+	for (int i = 0; i < size; i++)
+	{
+		edVal += A[i];
+	}
+
+	min = abs(A[0] - (edVal - A[0]));
+
+	for (int i = 0; i < size - 1; i++)
+	{
+		stVal += A[i];
+		edVal -= A[i];
+
+		if (abs(stVal - edVal) < min)
+		{
+			min = abs(stVal - edVal);
+		}
+	}
+	
+	return min;
+}
+
+int main() {
+	vector<int> test{ -1000,1000};
+
+	cout << solution(test) << "\n";
+}
+*/
+
+
+//codility Lesson3 FrogJmp
+/*
+#include <iostream>
+using namespace std;
+
+int solution(int X, int Y, int D) {
+	int ret = (Y - X) % D;
+
+	if (ret == 0)
+		return (Y - X) / D;
+	else
+		return (Y - X) / D + 1;
+}
+*/
+
+//codility Lesson4 PermCheck
+
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int solution(vector<int> &A) {
+	int size = A.size();
+	int* stor = new int[size];
+
+	for (int i = 0; i < size; i++)
+		stor[i] = 0;
+
+	for (int i = 0; i < size; i++)
+	{
+		if (A[i] > size || A[i] <= 0)
+			return 0;
+		else
+		{
+			if (stor[A[i] - 1] != 0)
+				return 0;
+
+			stor[A[i] - 1]++;
+		}
+	}
+
+	return 1;
+}
+
+int main() {
+	vector<int> test{ 4,1,2,3 };
+
+	cout << solution(test) << "\n";
+}
+*/
+
+//Date--> 1113
+
+//codility Lesson4 FrogRiverOne
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int solution(int X, vector<int> &A) {
+	int* stor = new int[X + 1];
+	int cnt = 0;
+
+	for (int i = 1; i <= X; i++)
+	{
+		stor[i] = 0;
+		cnt += i;
+	}
+
+	int size = A.size();
+	for (int i = 0; i < size; i++)
+	{
+		if (stor[A[i]] == 0)
+		{
+			stor[A[i]] = 1;
+			cnt -= A[i];
+
+			if (cnt == 0)
+				return i;
+		}
+	}
+
+	return -1;
+}
+*/
+
+//codility Lesson4 MissingInteger
+
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int solution(vector<int> &A) {
+	int size = A.size() + 1;
+
+	int* stor = new int[size];
+
+	for (int i = 1; i < size; i++)
+		stor[i] = 0;
+
+	for (int i = 0; i < size - 1; i++)
+	{
+		if (0 < A[i] && A[i] < size)
+			stor[A[i]] = 1;
+	}
+
+	for (int i = 1; i < size; i++)
+	{
+		if (stor[i] == 0)
+			return i;
+	}
+
+	return size;
+}
+
+
+int main()
+{
+	vector<int> test{ 1,2,3 };
+	cout << solution(test) << "\n";
+}
+*/
+
+//codility Lesson4 MasCounters
+
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> solution(int N, vector<int> &A) {
+	int size = A.size();
+	int min = 0;
+	int max = 0;
+	
+	vector<int> retArr;
+	retArr.assign(N, 0);
+
+	for (int i = 0; i < size; i++)
+	{
+		if (A[i] != N + 1)
+		{
+			if (retArr[A[i] - 1] < min)
+				retArr[A[i] - 1] = min + 1;
+			else
+				retArr[A[i] - 1]++;
+
+			if (max < retArr[A[i] - 1])
+				max = retArr[A[i] - 1];
+		}
+		else
+			min = max;
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		if (retArr[i] < min)
+			retArr[i] = min;
+	}
+
+	return retArr;
+}
+*/
+
+//codility Lesson5 CountDiv
+
+/*
+#include <iostream>
+using namespace std;
+
+int solution(int A, int B, int K) {
+	if (A >= 1)
+		return B / K - (A - 1) / K;
+	else
+		return B / K + 1;
+}
+*/
+
+//codility Lesson5 PassingCars
+
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int solution(vector<int> &A) {
+	int east = 0;
+	int pair = 0;
+	int size = A.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		if (A[i] == 0)
+			east++;
+		else
+		{
+			pair += east;
+			if (pair > 1000000000)
+				return -1;
+		}
+			
+	}
+
+	return pair;
+}
+
+*/
