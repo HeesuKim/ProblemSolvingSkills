@@ -7492,3 +7492,199 @@ int solution(vector<int> &A) {
 }
 
 */
+
+
+//Date-->1114
+//codility Lesson5 MinAvgTwoSlice
+//최소평균은 slice길이가 2또는 3인 경우에 반드시 나옴
+
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int solution(vector<int> &A) {
+	int size = A.size();
+	double min = (double)(A[0] + A[1]) / 2;
+	double avg;
+	int ret = 0;
+
+	for (int i = 0; i < size - 1; i++)
+	{
+		int bs = A[i] + A[i + 1];
+		avg = (double)bs / 2;
+		if (min > avg)
+		{
+			min = avg;
+			ret = i;
+		}
+
+		if (i < size - 2)
+		{
+			avg = (double)(bs + A[i + 2]) / 3;
+			if (min > avg)
+			{
+				min = avg;
+				ret = i;
+			}
+		}
+	}
+
+	return ret;
+}
+
+int main()
+{
+	vector<int> test{ 4,2,2,5,1,5,8 };
+	cout << solution(test) << "\n";
+
+}
+*/
+
+//codility Lesson5 GenomicRangeQuery
+/*
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> solution(string &S, vector<int> &P, vector<int> &Q) {
+	int size = S.size();
+	int** stor = new int*[size + 2];
+	for (int i = 0; i < size + 2; i++)
+		stor[i] = new int[4];
+
+	for (int i = 0; i < size + 2; i++)
+		for (int j = 0; j < 4; j++)
+			stor[i][j] = 0;
+
+	for (int i = 0; i < size; i++)
+	{
+		switch (S.at(i))
+		{
+			case 'A': stor[i + 1][0]++;
+				break;
+			case 'C': stor[i + 1][1]++;
+				break;
+			case 'G': stor[i + 1][2]++;
+				break;
+			case 'T': stor[i + 1][3]++;
+				break;
+		}
+
+		for (int j = 0; j < 4; j++)
+			stor[i + 2][j] = stor[i + 1][j];
+	}
+
+	vector<int> ret;
+	int mSize = P.size();
+	for (int i = 0; i < mSize; i++)
+	{
+		int st = P[i];
+		int ed = Q[i] + 1;
+
+		for (int j = 0; j < 4; j++)
+		{
+			if (stor[st][j] != stor[ed][j])
+			{
+				ret.push_back(j + 1);
+				break;
+			}
+		}
+	}
+
+	return ret;
+}
+
+int main()
+{
+	string a = "C";
+	vector<int> b{ 0 };
+	vector<int> c{ 0 };
+	vector<int> ret = solution(a, b, c);
+	for (int i = 0; i < ret.size(); i++)
+		cout << ret[i] << " ";
+	cout << "\n";
+}
+*/
+
+//Date-->1115
+
+//codility Lesson6 distinct
+/*
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int solution(vector<int> &A)
+{
+	int cnt = 1;
+	int size = A.size();
+	sort(A.begin(), A.end());
+
+	if (size == 0 || size == 1)
+		return size;
+
+	for (int i = 1; i < size; i++)
+	{
+		if (A[i] != A[i - 1])
+			cnt++;
+	}
+
+	return cnt;
+}
+
+*/
+
+//-->Date 1119
+
+//2차원배열 함수파라미터
+#include <iostream>
+using namespace std;
+
+template <typename TwoD>
+void solution(TwoD &arr, int x, int y)
+{
+	arr[x][y] = 15;
+}
+
+void sol2(int a[][5], int x, int y)
+{
+	a[x][y] = 17;
+}
+
+void sol3(int **ard, int x, int y)
+{
+	ard[x][y] = 16;
+}
+
+
+
+int main() {
+	int arr[5][5] = {
+		{1,2,3,4,5},
+		{1,2,3,4,5},
+		{ 1,2,3,4,5 },
+		{ 1,2,3,4,5 },
+		{ 1,2,3,4,5 }
+	};
+
+
+	int **arr2d;
+	arr2d = new int *[5];
+	for (int i = 0; i < 5; i++)
+		arr2d[i] = new int[5];
+
+	//solution(arr, 1, 1);
+	//sol2(arr, 1, 1);
+	sol3(arr2d, 1, 1);
+
+	cout << arr2d[1][1] << "\n";
+
+
+
+
+
+
+	return 0;
+}
